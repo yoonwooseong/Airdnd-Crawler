@@ -15,12 +15,11 @@ def extract_detail(accommodation_idxs):
         if results is not None:
             print(results)
         else:
-            gooo = 1
-            while gooo:
+            while True:
                 result = requests.get(f"{URL}"+room)
                 soup = BeautifulSoup(result.text, "html.parser")
                 if results is not None:
                     print(results)
-                    gooo = 0
+                    break;
                 else:
                     print("try again")
