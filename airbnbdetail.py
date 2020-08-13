@@ -72,6 +72,7 @@ def extract_detail(accommodation_idxs):
                                         ROOM_REVIEW_NUM=room_review_num.encode('utf8').decode('utf8'), ROOM_TYPE=room_type.encode('utf8').decode('utf8'))
                 conn.commit()
                 break;
+                
             else:
                 print("try again")
 
