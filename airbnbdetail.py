@@ -37,7 +37,8 @@ def extract_detail(accommodation_idxs):
                 room_option = room_options.get_text(strip=True)
                 room_rules_sort = soup.find_all("div", {"class","_1qsawv5"})
                 room_rules_content = soup.find_all("div", {"class","_1jlr81g"})
-                room_price = soup.find("span",{"class","_pgfqnw"})
+                room_price = soup.find("div", {"class","_ymq6as"})
+                
                 # room_picture = room_pictures.find("picture")
 
                 # print부분은 나중에 함수로 따로 빼기 !!
@@ -49,7 +50,7 @@ def extract_detail(accommodation_idxs):
                 print(room_option)
                 print(room_rules_sort)
                 print(room_rules_content)
-                print(f"{room_price}/박")
+                print(room_price)
                 # print(room_picture)
                 print()
                 break;
