@@ -29,7 +29,7 @@ def extract_detail2(accommodation_idxs):
             if results is not None:
                 
                 room_pictures = soup.find("div", {"class","_1h6n1zu"})
-                room_price = soup.find("div", {"class","_pgfqnw"})
+                room_price = soup.select_one('._ymq6as > _pgfqnw').string
 
                 room_picture = room_pictures.find("picture")
 

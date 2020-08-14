@@ -47,6 +47,7 @@ def extract_detail(accommodation_idxs):
                 room_option = room_options.get_text(strip=True)
                 room_rules_sort = soup.find_all("div", {"class","_1qsawv5"})
                 room_rules_content = soup.find_all("div", {"class","_1jlr81g"})
+                room_price = soup.select_one('._ymq6as > _pgfqnw')
                 # room_price = soup.find("div", {"class","_ymq6as"})
                 
                 # room_picture = room_pictures.find("picture")
@@ -60,7 +61,7 @@ def extract_detail(accommodation_idxs):
                 print(room_option)
                 print(room_rules_sort)
                 print(room_rules_content)
-                # print(room_price)
+                print(room_price)
                 # print(room_picture)
                 print()
 
@@ -68,6 +69,8 @@ def extract_detail(accommodation_idxs):
                 db = conn.cursor()
                 # encode 디비에 들어가기는 하나... 이상한 값이 출력됨
                 # encode()로 변환한다음 decode()로 한글 변환한다.
+
+                # 여기에 DB에 값이 있으면 건너뛰는 코드를 넣어줘야함
                 db.execute(sql_insert, ROOM_NAME=room_name.encode('utf8').decode('utf8'), ROOM_SCORE=room_score.encode('utf8').decode('utf8'), 
                                         ROOM_REVIEW_NUM=room_review_num.encode('utf8').decode('utf8'), ROOM_TYPE=room_type.encode('utf8').decode('utf8'))
                 conn.commit()
