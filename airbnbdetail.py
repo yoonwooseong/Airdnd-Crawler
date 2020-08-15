@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 
 import requests
 from bs4 import BeautifulSoup
+#from selenium import webdriver
 
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
@@ -18,9 +19,10 @@ def extract_detail(accommodation_idxs):
     for room_idx in accommodation_idxs:
         room = room_idx
         URL = URL_BASE+room+URL_PARAM
-
-
-
+        #driver = webdriver.Chrome()
+        #driver.get(URL)
+        #room_price2 = driver.find_element_by_xpath("/html/body/div[4]/div/div/div/div/div/div[1]/main/div/div/div[3]/div[2]/div/div/div[1]/div/div/div/div/div[1]/div[1]/div[1]/div/div/span/span[1]")
+        #room_price2 = driver.find_elements_by_class_name("_pgfqnw")
         while True:
             result = requests.get(f"{URL}")
             soup = BeautifulSoup(result.text, "html.parser")
@@ -31,7 +33,7 @@ def extract_detail(accommodation_idxs):
 
                 room_name = soup.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
                 room_scores = soup.find("span", {"class","_1jpdmc0"})
-
+                
                 # None일때 오류 방지
                 if room_scores is not None:
                     room_score = room_scores.get_text(strip=True)
@@ -51,7 +53,7 @@ def extract_detail(accommodation_idxs):
                 room_rules_sort = soup.select('._1044tk8 > ._1mqc21n > ._1qsawv5')
                 room_rules_sort_cont = soup.select('._1044tk8 > ._1mqc21n > ._1jlr81g')
                 #room_rules_content = soup.find_all("div", {"class","_1jlr81g"})
-                #room_price = soup.select_one('._pgfqnw')
+                room_price = soup.select('._3r2zp5v')
                 # room_price = soup.find("div", {"class","_ymq6as"})
                 
                 # room_picture = room_pictures.find("picture")
@@ -69,10 +71,7 @@ def extract_detail(accommodation_idxs):
                     print(room_rules_sort_cont[j].string)
                     j += 1
                 
-                
-                
-                #print(room_rules_content[0])
-                #print(room_price)
+                print(room_price)
                 # print(room_picture)
                 print()
 
