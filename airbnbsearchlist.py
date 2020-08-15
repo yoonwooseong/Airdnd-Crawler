@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-URL = "https://www.airbnb.co.kr/s/%EA%B4%8C/homes?checkin=2020-08-14&checkout=2020-08-19&adults=1&children=0&infants=0"
+URL = "https://www.airbnb.co.kr/s/%EA%B4%8C/homes?checkin=2020-10-01&checkout=2020-10-03&adults=1&children=0&infants=0"
 
 def get_last_page():
     set_last_page = 1

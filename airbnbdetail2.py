@@ -8,7 +8,7 @@ chrome_options.add_argument('--headless')
 chrome_driver_path = "C:/Wooseong/web scraper/chromedriver.exe"
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
-URL_PARAM = "?check_in=2020-08-01&check_out=2020-08-03"
+URL_PARAM = "?check_in=2020-10-01&check_out=2020-10-03"
 
 driver = webdriver.Chrome()
 
