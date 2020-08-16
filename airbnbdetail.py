@@ -47,7 +47,14 @@ def extract_detail(accommodation_infos):
                 room_option = room_options.get_text(strip=True)
                 room_rules_sort = soup.select('._1044tk8 > ._1mqc21n > ._1qsawv5')
                 room_rules_sort_cont = soup.select('._1044tk8 > ._1mqc21n > ._1jlr81g')
+
+                #room_rules_refund = soup.select('._8alet26')
+                #room_rules_refund_cont = soup.select('._8alet26 > ._1mqc21n > ._1jlr81g')
+                #room_host_talk = soup.find("div",{"class", "_1y6fhhr"})
+                room_bed_sort = soup.select('._9342og > ._1auxwog')
+                room_bed_sort_cont = soup.select('._9342og > ._1a5glfg')
                 
+                room_convenient_facilities = soup.select('._19xnuo97 > ._1nlbjeu')
                 # room_picture = room_pictures.find("picture")
 
                 # print부분은 나중에 함수로 따로 빼기 !!
@@ -63,7 +70,18 @@ def extract_detail(accommodation_infos):
                     print(room_rules_sort[j].string)
                     print(room_rules_sort_cont[j].string)
                     j += 1
+                k = 0
+                for i in room_bed_sort:               
+                    print(room_bed_sort[k].string)
+                    print(room_bed_sort_cont[k].string)
+                    k += 1
+                l = 0
+                for i in room_convenient_facilities:               
+                    print(room_convenient_facilities[l].find("div").get_text())
+                    l += 1
                 # print(room_picture)
+                #print(room_rules_refund)
+                #print(room_rules_refund_cont)
                 print()
 
                 #여기서부터 DB에 저장하기 위한 쿼리문
