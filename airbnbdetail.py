@@ -28,7 +28,7 @@ def extract_detail(accommodation_infos):
             if results is not None:
 
                 room_name = soup.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
-
+                room_location = soup.find("a", {"class","_5twioja"}).get_text()
                 room_scores = soup.find("span", {"class","_1jpdmc0"})
                 # None일때 오류 방지
                 if room_scores is not None:
@@ -55,30 +55,43 @@ def extract_detail(accommodation_infos):
                 room_bed_sort_cont = soup.select('._9342og > ._1a5glfg')
                 
                 room_convenient_facilities = soup.select('._19xnuo97 > ._1nlbjeu')
+
+                room_scores_sort = soup.select('._a3qxec > ._y1ba89')
+                room_scores_sort_num = soup.select('._a3qxec > ._bgq2leu > ._4oybiu')
+
+                room_reviews = soup.select('._50mnu4')
                 # room_picture = room_pictures.find("picture")
 
                 # print부분은 나중에 함수로 따로 빼기 !!
                 print()
                 print(URL)
                 print(room_name)
+                print(room_location)
                 print(room_price)
                 print(room_score, room_review_num)
                 print(room_type)
                 print(room_option)
                 j = 0
                 for i in room_rules_sort:               
-                    print(room_rules_sort[j].string)
-                    print(room_rules_sort_cont[j].string)
+                    print(room_rules_sort[j].string, " : ", room_rules_sort_cont[j].string)
                     j += 1
                 k = 0
                 for i in room_bed_sort:               
-                    print(room_bed_sort[k].string)
-                    print(room_bed_sort_cont[k].string)
+                    print(room_bed_sort[k].string, " : ", room_bed_sort_cont[k].string)
                     k += 1
                 l = 0
                 for i in room_convenient_facilities:               
                     print(room_convenient_facilities[l].find("div").get_text())
                     l += 1
+                m = 0
+                for i in room_scores_sort:               
+                    print(room_scores_sort[m].get_text(), room_scores_sort_num[m].get_text())
+                    m += 1
+
+                n = 0
+                for i in room_scores_sort:               
+                    print(room_reviews[n])
+                    n += 1
                 # print(room_picture)
                 #print(room_rules_refund)
                 #print(room_rules_refund_cont)
