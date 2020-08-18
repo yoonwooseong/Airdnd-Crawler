@@ -12,6 +12,23 @@ print(conn.version)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
 URL_PARAM = "?check_in=2020-10-01&check_out=2020-10-03"
+take_out_start_index = 0
+
+def take_out_list(extracted_list):
+    for e_list in extracted_list:               
+        print(e_list.string)
+
+def take_out_list_get_text(extracted_list):
+    for e_list in extracted_list:               
+        print(e_list.find("div").get_text())
+        
+
+def take_out_list_two(first_extracted_list, second_extracted_list):
+    take_out_start_index = 0
+    for f_list in first_extracted_list:               
+        print(f_list.string, " : ", second_extracted_list[take_out_start_index].string)
+    take_out_start_index = 0
+        
 
 def extract_detail(accommodation_infos):
     for room_info in accommodation_infos:
@@ -71,31 +88,16 @@ def extract_detail(accommodation_infos):
                 print(room_score, room_review_num)
                 print(room_type)
                 print(room_option)
-                j = 0
-                for i in room_rules_sort:               
-                    print(room_rules_sort[j].string, " : ", room_rules_sort_cont[j].string)
-                    j += 1
-                k = 0
-                for i in room_bed_sort:               
-                    print(room_bed_sort[k].string, " : ", room_bed_sort_cont[k].string)
-                    k += 1
-                l = 0
-                for i in room_convenient_facilities:               
-                    print(room_convenient_facilities[l].find("div").get_text())
-                    l += 1
-                m = 0
-                for i in room_scores_sort:               
-                    print(room_scores_sort[m].get_text(), room_scores_sort_num[m].get_text())
-                    m += 1
-
-                n = 0
-                for i in room_scores_sort:               
-                    print(room_reviews[n])
-                    n += 1
+                take_out_list_two(room_rules_sort, room_rules_sort_cont)
+                take_out_list_two(room_bed_sort, room_bed_sort_cont)
+                take_out_list_get_text(room_convenient_facilities)
+                take_out_list_two(room_scores_sort, room_scores_sort_num)
+                take_out_list(room_reviews)
+                print()
                 # print(room_picture)
                 #print(room_rules_refund)
                 #print(room_rules_refund_cont)
-                print()
+                
 
                 #여기서부터 DB에 저장하기 위한 쿼리문
                 sql_insert = 'insert into airdnd_acom VALUES(seq_airdnd_acom_idx.nextVal, :ROOM_NAME, :ROOM_SCORE, :ROOM_REVIEW_NUM, :ROOM_TYPE)'
