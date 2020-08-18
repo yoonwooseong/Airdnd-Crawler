@@ -10,6 +10,7 @@ def get_last_page():
 def extract_room_idx(last_page):
     room_infos = []
     for page in range(last_page):
+        print("Scraping the titles of page", page+1,"...")
         result = requests.get(f"{URL}&items_offset={page*20}")
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.find_all("div", {"class":"_3gn0lkf"})

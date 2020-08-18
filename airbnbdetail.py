@@ -32,9 +32,9 @@ def take_out_list_two(first_extracted_list, second_extracted_list):
 
 def extract_detail(accommodation_infos):
     for room_info in accommodation_infos:
-        room = room_info["room_idx"]
+        room_idx = room_info["room_idx"]
         room_price = room_info["room_price"]
-        URL = URL_BASE+room+URL_PARAM
+        URL = URL_BASE+room_idx+URL_PARAM
         
         while True:
             result = requests.get(f"{URL}")
@@ -99,18 +99,23 @@ def extract_detail(accommodation_infos):
                 #print(room_rules_refund_cont)
                 
 
-                #여기서부터 DB에 저장하기 위한 쿼리문
+                #DB에 접근하기 위한 쿼리문
+                sql_select = 'select room_idx from airdnd_acom where room_idx = :ROOM_IDX'
                 sql_insert = 'insert into airdnd_acom VALUES(seq_airdnd_acom_idx.nextVal, :ROOM_NAME, :ROOM_SCORE, :ROOM_REVIEW_NUM, :ROOM_TYPE)'
                 db = conn.cursor()
-
-                # 여기에 DB에 값이 있으면 건너뛰는 코드를 넣어줘야함 
-                db.execute(sql_insert, ROOM_NAME=room_name.encode('utf8').decode('utf8'), ROOM_SCORE=room_score.encode('utf8').decode('utf8'), 
+                room_idx = 2222222221
+                #DB에 값이 있으면 저장을 건너뛰는 코드
+                try:
+                    db.execute(sql_insert, ROOM_NAME=room_name.encode('utf8').decode('utf8'), ROOM_SCORE=room_score.encode('utf8').decode('utf8'), 
                                         ROOM_REVIEW_NUM=room_review_num.encode('utf8').decode('utf8'), ROOM_TYPE=room_type.encode('utf8').decode('utf8'))
-                conn.commit()
-                break;
+                except:
+                    print("이미 있습니다.")
+                finally:
+                    conn.commit()
                 
+                break;
             else:
-                print("try again")
+                print("try again..")
 
     db.close()
     conn.close()
