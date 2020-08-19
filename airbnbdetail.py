@@ -21,7 +21,10 @@ def take_out_list(extracted_list):
 def take_out_list_get_text(extracted_list):
     for e_list in extracted_list:               
         print(e_list.find("div").get_text())
-        
+
+def take_out_list_get_text_span(extracted_list):
+    for e_list in extracted_list:               
+        print(e_list.find("span", recursive=False).get_text())   
 
 def take_out_list_two(first_extracted_list, second_extracted_list):
     take_out_start_index = 0
@@ -43,7 +46,7 @@ def extract_detail(accommodation_infos):
         room_idx = room_info["room_idx"]
 
         if tuple([int(room_idx)]) not in room_nums_in_DB:
-            room_price = room_info["room_price"]
+            price = room_info["room_price"]
             URL = URL_BASE+room_idx+URL_PARAM
             
             while True:
@@ -53,8 +56,8 @@ def extract_detail(accommodation_infos):
                 # room_pictures = soup.find("div", {"class","_1h6n1zu"})
 
                 if results is not None:
-                    room_name = soup.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
-                    room_location = soup.find("a", {"class","_5twioja"}).get_text()
+                    main_title = soup.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
+                    addr = soup.find("a", {"class","_5twioja"}).get_text()
                     room_scores = soup.find("span", {"class","_1jpdmc0"})
                     # None일때 오류 방지
                     if room_scores is not None:
@@ -68,14 +71,27 @@ def extract_detail(accommodation_infos):
                     else:
                         room_review_num = "(0)"
 
-                    room_types , room_options = results.find_all("div", recursive=False)
-                    room_type = room_types.get_text(strip=True)
+                    sub_titles , room_options = results.find_all("div", recursive=False)
+                    sub_title = sub_titles.get_text(strip=True)
                     room_option = room_options.get_text(strip=True)
                     room_rules_sort = soup.select('._1044tk8 > ._1mqc21n > ._1qsawv5')
                     room_rules_sort_cont = soup.select('._1044tk8 > ._1mqc21n > ._1jlr81g')
 
-                    #room_rules_refund = soup.select('._8alet26')
-                    #room_rules_refund_cont = soup.select('._8alet26 > ._1mqc21n > ._1jlr81g')
+                    room_host = soup.select_one('._1y6fhhr').find("span").get_text()
+                    room_loc_info = soup.select('._162hp8xh')
+                    room_loc_info_cont = room_loc_info[0].select('._1y6fhhr').find("span").get_text() #얘는 context 한개
+                    room_loc_info_dist = room_loc_info[1].select('._175nxr3') #얘는 결과값 여러개 = 리스트
+                    
+                    #만약 지역 설명이 없으면
+                    if len(room_loc_info) == 0 | len(room_loc_info) == 1:
+                        room_loc_info = soup.select('_hauchj')
+                        print("바뀜!!!!!!!!!!!!!!!!!!!!!!!")
+
+                    room_rules_prev = soup.select('._m9x7bnz')
+                    room_use_rules = room_rules_prev[0].select('._ud8a1c > ._u827kd')
+                    room_safety = room_rules_prev[1].select('._ud8a1c > ._u827kd')
+                    
+
                     #room_host_talk = soup.find("div",{"class", "_1y6fhhr"})
                     room_bed_sort = soup.select('._9342og > ._1auxwog')
                     room_bed_sort_cont = soup.select('._9342og > ._1a5glfg')
@@ -91,17 +107,22 @@ def extract_detail(accommodation_infos):
                     # print부분은 나중에 함수로 따로 빼기 !!
                     print()
                     print(URL)
-                    print(room_name, room_idx)
-                    print(room_location)
-                    print(room_price)
+                    print(main_title, room_idx)
+                    print(addr)
+                    print(price)
                     print(room_score, room_review_num)
-                    print(room_type)
+                    print(sub_title)
                     print(room_option)
                     take_out_list_two(room_rules_sort, room_rules_sort_cont)
+                    print("room_host : ", room_host)
+                    print("room_loc : ", room_loc_info)
                     take_out_list_two(room_bed_sort, room_bed_sort_cont)
                     take_out_list_get_text(room_convenient_facilities)
                     take_out_list_two(room_scores_sort, room_scores_sort_num)
                     take_out_list(room_reviews)
+                    take_out_list_get_text_span(room_use_rules)
+                    print()
+                    take_out_list_get_text_span(room_safety)
                     print()
                     # print(room_picture)
                     #print(room_rules_refund)
@@ -112,8 +133,8 @@ def extract_detail(accommodation_infos):
                     db = conn.cursor()
 
                     #DB에 값이 없으면 저장
-                    db.execute(sql_insert, ROOM_NAME=room_name.encode('utf8').decode('utf8'), ROOM_SCORE=room_score.encode('utf8').decode('utf8'), 
-                                    ROOM_REVIEW_NUM=room_review_num.encode('utf8').decode('utf8'), ROOM_TYPE=room_type.encode('utf8').decode('utf8'), ROOM_IDX=room_idx)
+                    db.execute(sql_insert, ROOM_NAME=main_title.encode('utf8').decode('utf8'), ROOM_SCORE=room_score.encode('utf8').decode('utf8'), 
+                                    ROOM_REVIEW_NUM=room_review_num.encode('utf8').decode('utf8'), ROOM_TYPE=sub_title.encode('utf8').decode('utf8'), ROOM_IDX=room_idx)
                     conn.commit()
                     
                     break;
