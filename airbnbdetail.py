@@ -21,7 +21,6 @@ def extract_pictures(room_pictures):
     for pictures in room_pictures:
         room_picture = pictures.find("img").attrs['src']
         picture.append(room_picture)
-        #print(room_picture)
         i += 1
         if i == 5:
             return picture
@@ -29,28 +28,24 @@ def extract_pictures(room_pictures):
 def take_out_list(extracted_list):
     data_list = []
     for e_list in extracted_list:
-        #print(e_list.string)
         data_list.append(e_list.string)               
     return data_list
 
 def take_out_list_get_text_pre(extracted_list):
     data_list = []
     for e_list in extracted_list:               
-        #print(e_list.find_all("div"))
         data_list.append(e_list.find_all("div"))
     return data_list
 
 def take_out_list_get_text_div(extracted_list):
     data_list = []
     for e_list in extracted_list:               
-        #print(e_list.find("div").get_text())
         data_list.append(e_list.find("div").get_text())
     return data_list
 
 def take_out_list_get_text_span(extracted_list):
     data_list = []
     for e_list in extracted_list:               
-        #print(e_list.find("span", recursive=False).get_text())
         data_list.append(e_list.find("span", recursive=False).get_text())
     return data_list
 
@@ -58,7 +53,6 @@ def take_out_list_two(title, content):
     data_dict = {}
     take_out_start_index = 0
     for f_list in title:               
-        #print(f_list.string, " : ", content[take_out_start_index].string)
         data_dict = { take_out_start_index:[f_list.string, content[take_out_start_index].string] }
         take_out_start_index += 1
     take_out_start_index = 0
@@ -71,11 +65,8 @@ def check_room_idx_in_DB():
     return room_nums_in_DB
 
 def insert_room_data_in_OracleDB(data):
-    print("2번 data : ", data['main_title'])
     #DB에 접근하기 위한 쿼리문
     sql_insert = 'insert into airdnd_acom VALUES(seq_airdnd_acom_idx.nextVal, :ROOM_NAME, :ROOM_SCORE, :ROOM_REVIEW_NUM, :ROOM_TYPE ,:ROOM_IDX)'
-
-    #DB에 값이 없으면 저장
     db.execute(sql_insert, ROOM_NAME=data['main_title'].encode('utf8').decode('utf8'), ROOM_SCORE=data['room_score'].encode('utf8').decode('utf8'), 
                     ROOM_REVIEW_NUM=data['room_review_num'].encode('utf8').decode('utf8'), ROOM_TYPE=data['sub_title'].encode('utf8').decode('utf8'), ROOM_IDX=data['room_idx'])
     conn.commit()
@@ -130,31 +121,16 @@ def scrape_page(URL, room_idx, price):
             room_convenient_facilities = soup.select('._19xnuo97 > ._1nlbjeu')
             room_scores_sort = soup.select('._a3qxec > ._y1ba89')
             room_scores_sort_num = soup.select('._a3qxec > ._bgq2leu > ._4oybiu')
-
             room_reviews = soup.select('._50mnu4')
-
-            # print부분은 나중에 변수로 다 저장하기!
-            print()
-            print(URL)
-            print(main_title)
-            print(room_idx , price)
-            print(addr)
-            print(room_score, room_review_num)
-            print(sub_title)
-            print(room_option)
             room_notice = take_out_list_two(room_notice_title, room_notice_cont)
             room_bed = take_out_list_two(room_bed_sort, room_bed_sort_cont)
             room_rating = take_out_list_two(room_scores_sort, room_scores_sort_num)
-            print("room_host : ", room_host)
-            print()
-            print("room_loc_info_cont : ", room_loc_info_cont)
             room_loc_info_distance = take_out_list_get_text_pre(room_loc_info_dist)
             room_convenient_facility = take_out_list_get_text_div(room_convenient_facilities)
             room_review = take_out_list(room_reviews)
             room_use_rule = take_out_list_get_text_span(room_use_rules)
             room_safety_rule = take_out_list_get_text_span(room_safety)
             picture = extract_pictures(room_pictures)
-            print()
             
             data = {'URL':URL,'main_title':main_title, 'addr':addr, 'room_idx':room_idx,'price':price,
                     'room_score':room_score, 'room_review_num':room_review_num, 'sub_title':sub_title,
@@ -162,18 +138,8 @@ def scrape_page(URL, room_idx, price):
                     'picture':picture, 'room_convenient_facility':room_convenient_facility , 'room_use_rule':room_use_rule,
                     'room_safety_rule':room_safety_rule , 'room_loc_info_distance':room_loc_info_distance,
                     'room_notice':room_notice, 'room_bed':room_bed, 'room_rating':room_rating}
-
             data['room_reviews'] = room_review
 
-            #DB에 접근하기 위한 쿼리문
-            #sql_insert = 'insert into airdnd_acom VALUES(seq_airdnd_acom_idx.nextVal, :ROOM_NAME, :ROOM_SCORE, :ROOM_REVIEW_NUM, :ROOM_TYPE ,:ROOM_IDX)'
-
-            #DB에 값이 없으면 저장
-            #db.execute(sql_insert, ROOM_NAME=main_title.encode('utf8').decode('utf8'), ROOM_SCORE=room_score.encode('utf8').decode('utf8'), 
-            #                ROOM_REVIEW_NUM=room_review_num.encode('utf8').decode('utf8'), ROOM_TYPE=sub_title.encode('utf8').decode('utf8'), ROOM_IDX=room_idx)
-            #conn.commit()
-            #print("DB저장 성공")
-            print("3번 data : ", data['main_title'])
             return data
         else:
             print("try again..")
@@ -185,15 +151,12 @@ def extract_detail(accommodation_infos):
     for room_info in accommodation_infos:
         room_idx = room_info["room_idx"]
 
-        #방번호를 검색해 DB에 있는지 체크하기
+        #방번호를 검색해 DB에 있는지 체크
         if tuple([int(room_idx)]) not in room_nums_in_DB:
             price = room_info["room_price"]
             URL = URL_BASE+room_idx+URL_PARAM
             data = scrape_page(URL, room_idx, price)
-
-            print("1번 data : ", data['main_title'])
             insert_room_data_in_OracleDB(data)
-            
         else:
             print("방번호 ", room_idx, "는 이미 저장되어 있습니다.")
 
