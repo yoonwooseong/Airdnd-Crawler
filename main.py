@@ -5,4 +5,4 @@ from airbnbdetail import extract_detail
 accommodation_infos = get_accommodation_infos()
 
 extract_detail(accommodation_infos)
-#extract_detail2(accommodation_idxs)
+#extract_detail2(accommodation_infos)
