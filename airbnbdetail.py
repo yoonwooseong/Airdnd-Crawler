@@ -1,4 +1,5 @@
 import cx_Oracle
+#import pymysql
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -8,12 +9,27 @@ from urllib.parse import quote_plus
 os.environ["NLS_LANG"] = ".AL32UTF8"
 # DB와 연결된 코드
 conn = cx_Oracle.connect('test/1111@localhost:1521/xe')
+#conn = pymysql.connect(host='localhost', port=3306, user='root', passwd='1111', db='airdnd_DB')
 print(conn.version)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
 URL_PARAM = "?check_in=2020-10-01&check_out=2020-10-03"
 take_out_start_index = 0
 db = conn.cursor()
+
+def check_room_idx_in_DB(): 
+    sql_select = 'select room_idx from airdnd_acom'
+    db.execute(sql_select)
+    room_nums_in_DB = db.fetchall()
+    return room_nums_in_DB
+
+def insert_room_data_in_OracleDB(data):
+    #DB에 접근하기 위한 쿼리문
+    sql_insert = 'insert into airdnd_acom VALUES(seq_airdnd_acom_idx.nextVal, :ROOM_NAME, :ROOM_SCORE, :ROOM_REVIEW_NUM, :ROOM_TYPE ,:ROOM_IDX)'
+    db.execute(sql_insert, ROOM_NAME=data['main_title'].encode('utf8').decode('utf8'), ROOM_SCORE=data['room_score'].encode('utf8').decode('utf8'), 
+                    ROOM_REVIEW_NUM=data['room_review_num'].encode('utf8').decode('utf8'), ROOM_TYPE=data['sub_title'].encode('utf8').decode('utf8'), ROOM_IDX=data['room_idx'])
+    conn.commit()
+    print("DB저장 성공")
 
 def extract_pictures(room_pictures):
     picture = []
@@ -57,20 +73,6 @@ def take_out_list_two(title, content):
         take_out_start_index += 1
     take_out_start_index = 0
     return data_dict
-
-def check_room_idx_in_DB(): 
-    sql_select = 'select room_idx from airdnd_acom'
-    db.execute(sql_select)
-    room_nums_in_DB = db.fetchall()
-    return room_nums_in_DB
-
-def insert_room_data_in_OracleDB(data):
-    #DB에 접근하기 위한 쿼리문
-    sql_insert = 'insert into airdnd_acom VALUES(seq_airdnd_acom_idx.nextVal, :ROOM_NAME, :ROOM_SCORE, :ROOM_REVIEW_NUM, :ROOM_TYPE ,:ROOM_IDX)'
-    db.execute(sql_insert, ROOM_NAME=data['main_title'].encode('utf8').decode('utf8'), ROOM_SCORE=data['room_score'].encode('utf8').decode('utf8'), 
-                    ROOM_REVIEW_NUM=data['room_review_num'].encode('utf8').decode('utf8'), ROOM_TYPE=data['sub_title'].encode('utf8').decode('utf8'), ROOM_IDX=data['room_idx'])
-    conn.commit()
-    print("DB저장 성공")
 
 def scrape_page(URL, room_idx, price):
     while True:
