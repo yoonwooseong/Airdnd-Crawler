@@ -4,6 +4,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import quote_plus
+from airbnblatlng import Convert_to_latlng
 
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
@@ -83,6 +84,7 @@ def scrape_page(URL, room_idx, price):
         if results is not None:
             main_title = soup.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
             addr = soup.find("a", {"class","_5twioja"}).get_text()
+            latlng = Convert_to_latlng(addr)
 
             # None일때 오류 방지
             room_scores = soup.find("span", {"class","_1jpdmc0"})
@@ -133,9 +135,8 @@ def scrape_page(URL, room_idx, price):
             room_use_rule = take_out_list_get_text_span(room_use_rules)
             room_safety_rule = take_out_list_get_text_span(room_safety)
             picture = extract_pictures(room_pictures)
-            
-            
-            data = {'URL':URL,'main_title':main_title, 'addr':addr, 'room_idx':room_idx,'price':price,
+
+            data = {'URL':URL,'main_title':main_title, 'addr':addr, 'latlng':latlng, 'room_idx':room_idx,'price':price,
                     'room_score':room_score, 'room_review_num':room_review_num, 'sub_title':sub_title,
                     'room_option':room_option, 'room_host':room_host, 'room_loc_info_cont':room_loc_info_cont,
                     'picture':picture, 'room_convenient_facility':room_convenient_facility , 'room_use_rule':room_use_rule,
