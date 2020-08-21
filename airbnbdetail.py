@@ -134,6 +134,7 @@ def scrape_page(URL, room_idx, price):
             room_safety_rule = take_out_list_get_text_span(room_safety)
             picture = extract_pictures(room_pictures)
             
+            
             data = {'URL':URL,'main_title':main_title, 'addr':addr, 'room_idx':room_idx,'price':price,
                     'room_score':room_score, 'room_review_num':room_review_num, 'sub_title':sub_title,
                     'room_option':room_option, 'room_host':room_host, 'room_loc_info_cont':room_loc_info_cont,
