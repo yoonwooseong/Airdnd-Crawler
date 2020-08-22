@@ -1,5 +1,4 @@
-import cx_Oracle
-#import pymysql
+import pymysql
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -9,9 +8,7 @@ from airbnblatlng import Convert_to_latlng
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
 # DB와 연결된 코드
-conn = cx_Oracle.connect('test/1111@localhost:1521/xe')
-#conn = pymysql.connect(host='localhost', port=3306, user='root', passwd='1111', db='airdnd_DB')
-print(conn.version)
+conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8')
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
 URL_PARAM = "?check_in=2020-10-01&check_out=2020-10-03"
@@ -19,16 +16,20 @@ take_out_start_index = 0
 db = conn.cursor()
 
 def check_room_idx_in_DB(): 
-    sql_select = 'select room_idx from airdnd_acom'
+    sql_select = 'select room_idx from airdnd_room_test'
     db.execute(sql_select)
     room_nums_in_DB = db.fetchall()
     return room_nums_in_DB
 
-def insert_room_data_in_OracleDB(data):
+def insert_room_data_in_MysqlDB(data):
+    print(data['room_idx'])
     #DB에 접근하기 위한 쿼리문
-    sql_insert = 'insert into airdnd_acom VALUES(seq_airdnd_acom_idx.nextVal, :ROOM_NAME, :ROOM_SCORE, :ROOM_REVIEW_NUM, :ROOM_TYPE ,:ROOM_IDX)'
-    db.execute(sql_insert, ROOM_NAME=data['main_title'].encode('utf8').decode('utf8'), ROOM_SCORE=data['room_score'].encode('utf8').decode('utf8'), 
-                    ROOM_REVIEW_NUM=data['room_review_num'].encode('utf8').decode('utf8'), ROOM_TYPE=data['sub_title'].encode('utf8').decode('utf8'), ROOM_IDX=data['room_idx'])
+    sql_insert =  'insert into airdnd_room_test (room_idx, room_name, room_price, room_score, room_review_num, room_type, room_option) VALUES (%s, %s, %s, %s, %s, %s, %s)'
+    val = (data['room_idx'], data['main_title'].encode('utf8').decode('utf8'), data['price'].encode('utf8').decode('utf8'),
+                    data['room_score'].encode('utf8').decode('utf8'), data['room_review_num'].encode('utf8').decode('utf8'),
+                    data['sub_title'].encode('utf8').decode('utf8'), data['room_option'].encode('utf8').decode('utf8'))
+    
+    db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공")
 
@@ -70,7 +71,7 @@ def take_out_list_two(title, content):
     data_dict = {}
     take_out_start_index = 0
     for f_list in title:               
-        data_dict = { take_out_start_index:[f_list.string, content[take_out_start_index].string] }
+        data_dict[take_out_start_index] = [f_list.string, content[take_out_start_index].string]
         take_out_start_index += 1
     take_out_start_index = 0
     return data_dict
@@ -80,8 +81,14 @@ def scrape_page(URL, room_idx, price):
         result = requests.get(f"{URL}")
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.find("div",{"class","_tqmy57"})
+        if price.find('할') == -1:
+            price = price[price.find('₩')+1:]
+        else:
+            price = price[price.find('₩')+1:price.find('할')]
+        int_price = int(price.replace(',',''))
 
         if results is not None:
+
             main_title = soup.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
             addr = soup.find("a", {"class","_5twioja"}).get_text()
             latlng = Convert_to_latlng(addr)
@@ -98,13 +105,23 @@ def scrape_page(URL, room_idx, price):
                 room_review_num = room_review_nums.get_text(strip=True)
             else:
                 room_review_num = "(0)"
-
+            try:
+                soup.select('._nu65sd')[1].find("span")
+                isSuperHost = True
+            except:
+                isSuperHost = False
             sub_titles , room_options = results.find_all("div", recursive=False)
             sub_title = sub_titles.get_text(strip=True)
             room_option = room_options.get_text(strip=True)
             room_notice_title = soup.select('._1044tk8 > ._1mqc21n > ._1qsawv5')
             room_notice_cont = soup.select('._1044tk8 > ._1mqc21n > ._1jlr81g')
-            room_host = soup.select_one('._1y6fhhr').find("span").get_text()
+            print(URL)
+
+            try:
+                room_host = soup.select_one('._1y6fhhr').find("span").get_text()
+            except:
+                room_host = ""
+
             room_loc_info = soup.select('._1cvivhm > ._1byskwn > ._vd6w38n')
             room_loc_info2 = soup.select('._1cvivhm > ._1byskwn')[0].find_all("div",{"class","_162hp8xh"})
             
@@ -115,7 +132,6 @@ def scrape_page(URL, room_idx, price):
             else:
                 room_loc_info_cont = room_loc_info2[0].select('._1y6fhhr')#.find("span").get_text() #얘는 context 한개
                 room_loc_info_dist = soup.select_one('._17k42na').select('._175nxr3') #얘는 결과값 여러개 = 리스트
-
             room_rules_prev = soup.select('._m9x7bnz')
             room_use_rules = room_rules_prev[0].select('._ud8a1c > ._u827kd')
             room_safety = room_rules_prev[1].select('._ud8a1c > ._u827kd')
@@ -136,7 +152,7 @@ def scrape_page(URL, room_idx, price):
             room_safety_rule = take_out_list_get_text_span(room_safety)
             picture = extract_pictures(room_pictures)
 
-            data = {'URL':URL,'main_title':main_title, 'addr':addr, 'latlng':latlng, 'room_idx':room_idx,'price':price,
+            data = {'URL':URL,'main_title':main_title, 'isSuperHost':isSuperHost, 'addr':addr, 'latlng':latlng, 'room_idx':room_idx, 'price':int_price,
                     'room_score':room_score, 'room_review_num':room_review_num, 'sub_title':sub_title,
                     'room_option':room_option, 'room_host':room_host, 'room_loc_info_cont':room_loc_info_cont,
                     'picture':picture, 'room_convenient_facility':room_convenient_facility , 'room_use_rule':room_use_rule,
@@ -160,7 +176,7 @@ def extract_detail(accommodation_infos):
             price = room_info["room_price"]
             URL = URL_BASE+room_idx+URL_PARAM
             data = scrape_page(URL, room_idx, price)
-            insert_room_data_in_OracleDB(data)
+            insert_room_data_in_MysqlDB(data)
         else:
             print("방번호 ", room_idx, "는 이미 저장되어 있습니다.")
 

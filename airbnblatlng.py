@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 def Convert_to_latlng(query):
     base_url = "https://maps.googleapis.com/maps/api/geocode/xml?address="
-    api_key = "본인 키 입력"
+    api_key = "AIzaSyBuSzbqsUUg0qzcvTAv3L_XkxoxXFyeAQ4"
     url = base_url+query+"&key="+api_key
     result = requests.get(url)
     html = BeautifulSoup(result.text, "html.parser")
