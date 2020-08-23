@@ -5,9 +5,10 @@
     </head>
     <body>
         <h1>Airdnd Scraper</h1>
-        <form>
-            <input placeholder="
-            Where do you want to go?" required />
+        <form action="/scrape" method="get">
+            <input placeholder="Where are you going?" required name="place"/>
+            <input placeholder="2020-09-10" required name="checkin"/>
+            <input placeholder="2020-09-17" required name="checkout"/>
             <button>Search</button>
         </form>
     </body>

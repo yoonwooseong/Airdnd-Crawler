@@ -7,6 +7,10 @@ from airbnblatlng import Convert_to_latlng
 
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
+
+headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
+
+
 # DB와 연결된 코드
 conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8')
 
@@ -78,15 +82,17 @@ def take_out_list_two(title, content):
 
 def scrape_page(URL, room_idx, price):
     while True:
-        result = requests.get(f"{URL}")
+        result = requests.get(f"{URL}", headers = headers)
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.find("div",{"class","_tqmy57"})
+        print(URL)
         if price.find('할') == -1:
             price = price[price.find('₩')+1:]
         else:
             price = price[price.find('₩')+1:price.find('할')]
         int_price = int(price.replace(',',''))
-
+        
+        #크롤링 소스 가져오기
         if results is not None:
 
             main_title = soup.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
@@ -110,9 +116,11 @@ def scrape_page(URL, room_idx, price):
                 isSuperHost = True
             except:
                 isSuperHost = False
-            sub_titles , room_options = results.find_all("div", recursive=False)
-            sub_title = sub_titles.get_text(strip=True)
-            room_option = room_options.get_text(strip=True)
+            #sub_titles , room_options = results.find_all("div", recursive=False)
+            #sub_title = sub_titles.get_text(strip=True)
+            #room_option = room_options.get_text(strip=True)
+            sub_title = ""
+            room_option = ""
             room_notice_title = soup.select('._1044tk8 > ._1mqc21n > ._1qsawv5')
             room_notice_cont = soup.select('._1044tk8 > ._1mqc21n > ._1jlr81g')
             print(URL)
