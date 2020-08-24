@@ -5,7 +5,7 @@ URL = "https://www.airbnb.co.kr/s/%EA%B4%8C/homes?checkin=2020-10-01&checkout=20
 #adults=1&children=0&infants=0
 
 def get_last_page():
-    set_last_page = 4
+    set_last_page = 1
     return int(set_last_page)
 
 def extract_room_idx(last_page):

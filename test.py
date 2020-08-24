@@ -4,7 +4,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36'}
 
-URL_BASE = "https://www.airbnb.co.kr/rooms/35321114?adults=1&location=%EC%A0%9C%EC%A3%BC%EB%8F%84&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
+URL_BASE = "https://www.airbnb.co.kr/rooms/39804170?adults=1&location=%EA%B4%8C&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
 
 driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver')
 driver.implicitly_wait(3)
