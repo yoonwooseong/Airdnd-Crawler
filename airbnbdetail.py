@@ -1,21 +1,21 @@
 import pymysql
 import os
-import requests
+#import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
 from urllib.parse import quote_plus
 from airbnblatlng import Convert_to_latlng
 
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
-
-headers = {'User-Agent':'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
-
+#headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36'}
+driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver')
 
 # DB와 연결된 코드
 conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8')
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
-URL_PARAM = "?check_in=2020-10-01&check_out=2020-10-03"
+URL_PARAM = "?adults=1&location=%EA%B4%8C&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
 take_out_start_index = 0
 db = conn.cursor()
 
@@ -82,10 +82,18 @@ def take_out_list_two(title, content):
 
 def scrape_page(URL, room_idx, price):
     while True:
-        result = requests.get(f"{URL}", headers = headers)
-        soup = BeautifulSoup(result.text, "html.parser")
-        results = soup.find("div",{"class","_tqmy57"})
+        
+        driver.implicitly_wait(3)
+        driver.get(URL)
+        html = driver.page_source
+        #result = requests.get(f"{URL}", headers = headers)
+        #soup = BeautifulSoup(result.text, "html.parser")
+        soup = BeautifulSoup(html, "html.parser")
+        results = soup.select_one('.with-new-header')
+        abc = results.select_one('._1cnse2m')
+        bc = abc.select_one('._14i3z6h')
         print(URL)
+        print(bc)
         if price.find('할') == -1:
             price = price[price.find('₩')+1:]
         else:
@@ -93,9 +101,9 @@ def scrape_page(URL, room_idx, price):
         int_price = int(price.replace(',',''))
         
         #크롤링 소스 가져오기
-        if results is not None:
+        if bc is not None:
 
-            main_title = soup.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
+            main_title = results.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
             addr = soup.find("a", {"class","_5twioja"}).get_text()
             latlng = Convert_to_latlng(addr)
 
@@ -131,14 +139,16 @@ def scrape_page(URL, room_idx, price):
                 room_host = ""
 
             room_loc_info = soup.select('._1cvivhm > ._1byskwn > ._vd6w38n')
-            room_loc_info2 = soup.select('._1cvivhm > ._1byskwn')[0].find_all("div",{"class","_162hp8xh"})
+            room_loc_info2 = soup.select('._1cvivhm > ._1byskwn') #[0].find_all("div",{"class","_162hp8xh"})
+            print(room_loc_info2)
             
             #만약 지역 설명이 없으면
             if len(room_loc_info) == 1:
                 room_loc_info_cont = "location content is None"
                 room_loc_info_dist = room_loc_info[0].select('._175nxr3')
             else:
-                room_loc_info_cont = room_loc_info2[0].select('._1y6fhhr')#.find("span").get_text() #얘는 context 한개
+                room_loc_info_cont = soup.select('._cfvh61 > ._1y6fhhr')#.find("span").get_text() #얘는 context 한개
+                print(room_loc_info_cont)
                 room_loc_info_dist = soup.select_one('._17k42na').select('._175nxr3') #얘는 결과값 여러개 = 리스트
             room_rules_prev = soup.select('._m9x7bnz')
             room_use_rules = room_rules_prev[0].select('._ud8a1c > ._u827kd')
@@ -175,7 +185,7 @@ def scrape_page(URL, room_idx, price):
 
 def extract_detail(accommodation_infos):
     room_nums_in_DB = check_room_idx_in_DB()
-    
+    print(accommodation_infos)
     for room_info in accommodation_infos:
         room_idx = room_info["room_idx"]
 
