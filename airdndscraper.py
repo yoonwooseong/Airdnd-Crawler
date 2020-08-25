@@ -8,6 +8,10 @@ app = Flask("SuperScrapper")
 def home():
     return render_template("home.html")
 
+#@app.route("/loading")
+#def loading():
+#    return render_template("loading.html")
+
 @app.route("/scrape")
 def scrape():
     place = request.args.get('place')
