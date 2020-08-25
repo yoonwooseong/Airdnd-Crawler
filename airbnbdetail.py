@@ -8,11 +8,6 @@ from airbnblatlng import Convert_to_latlng
 
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
-headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36'}
-options = webdriver.ChromeOptions()
-options.add_argument('headless')
-options.add_argument('window-size=1920x1080')
-options.add_argument("disable-gpu")
 
 # DB와 연결된 코드
 conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8')
@@ -73,6 +68,7 @@ def take_out_list_get_review(extracted_list):
         room_reviews_name = room_reviews_name_date[:room_reviews_name_date.find("년 ")-4]
         room_reviews_date = e_list.select_one('div._1oy2hpi > div._1lc9bb6 > div').string
         room_reviews_cont = e_list.select_one('div._1y6fhhr > span').get_text()
+
         data_dict = {'room_reviews_name':room_reviews_name, 'room_reviews_date':room_reviews_date ,'room_reviews_cont':room_reviews_cont}
         data_list.append(data_dict)
     print("reviews : ", data_list)  
@@ -104,7 +100,7 @@ def take_out_list_two(title, content):
 
 def scrape_page(URL, room_idx, price):
     while True:
-        driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver') #, chrome_options=options
+        driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver')
         driver.implicitly_wait(3)
         driver.get(URL)
         time.sleep(3)
@@ -116,8 +112,8 @@ def scrape_page(URL, room_idx, price):
         soup = BeautifulSoup(html, "html.parser")
         
         results = soup.select_one('body.with-new-header')
-        abc = results.select_one('div._e296pg')
-        bc = abc.select_one('div._tqmy57')
+        main_container = results.select_one('div._e296pg')
+        load_test = main_container.select_one('div._tqmy57')
 
         if price.find('할') == -1:
             price = price[price.find('₩')+1:]
@@ -126,89 +122,84 @@ def scrape_page(URL, room_idx, price):
         int_price = int(price.replace(',',''))
         
         #크롤링 소스 가져오기
-        if bc is not None:
-            main_title = abc.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
-            print()
-            print("URL : ",URL)
-            print('main_title : ',main_title)
+        if load_test is not None:
+            main_title = main_container.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
             addr = results.find("a", {"class","_5twioja"}).get_text()
-            print('addr : ', addr)
-            latlng = Convert_to_latlng(addr)
-            print('latlng : ' , latlng)
+            latlng = Convert_to_latlng(addr) #Google geocording API 적용 함수
+            
             # None일때 오류 방지
-            room_scores = abc.find("span", {"class","_1jpdmc0"})
+            room_scores = main_container.find("span", {"class","_1jpdmc0"})
             if room_scores is not None:
                 room_score = room_scores.get_text(strip=True)
             else:
                 room_score = "0.00"
-            print("room_score : ",room_score)
-            room_review_nums = abc.find("span", {"class","_1sqnphj"})
+            room_review_nums = main_container.find("span", {"class","_1sqnphj"})
             if room_review_nums is not None:
                 room_review_num = room_review_nums.get_text(strip=True)
             else:
                 room_review_num = "(0)"
-            print("room_review_num :", room_review_num)
             try:
                 soup.select('._nu65sd')[1].find("span")
                 isSuperHost = True
             except:
                 isSuperHost = False
-            print("isSuperHost : ", isSuperHost)
             sub_titles , room_options = results.find("div", {"class", "_tqmy57"}).find_all("div", recursive=False)
             sub_title = sub_titles.get_text(strip=True)
             room_option = room_options.get_text(strip=True)
-            print("sub, option : ", sub_title, room_option)
-            #sub_title = ""
-            #room_option = ""
-            room_notice_title = abc.select('div._1044tk8 > div._1mqc21n > div._1qsawv5')
-            room_notice_cont = abc.select('div._1044tk8 > div._1mqc21n > div._1jlr81g')
-            
-            room_pictures = abc.find_all("div", {"class", "_1h6n1zu"})
-            room_bed_sort = abc.select('div._9342og > div._1auxwog')
-            room_bed_sort_cont = abc.select('div._9342og > div._1a5glfg')
-            room_convenient_facilities = abc.select('div._19xnuo97 > div._1nlbjeu')
-            #room_scores_sort = abc.select('div._a3qxec > div._y1ba89')
-            #room_scores_sort_num = abc.select('div._a3qxec > div._bgq2leu > div._4oybiu')
-            room_reviews = abc.select('div._50mnu4')
-            room_notice = take_out_list_two(room_notice_title, room_notice_cont)
-            room_bed = take_out_list_two(room_bed_sort, room_bed_sort_cont)
-            #room_rating = take_out_list_two(room_scores_sort, room_scores_sort_num)
-            room_rating = {}
-            room_convenient_facility = take_out_list_get_text_div(room_convenient_facilities)
-            room_review = take_out_list_get_review(room_reviews)
-            picture = extract_pictures(room_pictures)
+            room_pictures = main_container.find_all("div", {"class", "_1h6n1zu"})
+            room_notice_title = main_container.select('div._1044tk8 > div._1mqc21n > div._1qsawv5')
+            room_notice_cont = main_container.select('div._1044tk8 > div._1mqc21n > div._1jlr81g')
+            try:
+                room_host = main_container.select_one('div._1y6fhhr').find("span").get_text()
+            except:
+                room_host = ""
 
-            #reqeust로 출력------------------------------------------------------------
-
-            room_loc_info = abc.select_one('div._1cvivhm > div._1byskwn > div._vd6w38n')
-            #만약 지역 설명이 없으면
+            room_loc_info = main_container.select_one('div._1cvivhm > div._1byskwn > div._vd6w38n')
+            #만약 지역 설명이 없이 주변 명소 거리만 나온다면
             if room_loc_info is not None:
                 room_loc_info_cont = "location content is None"
                 room_loc_info_dist = room_loc_info.select('div._dc0jge')
             else:
-                room_loc_info_cont = abc.find_all("div",{"class","_162hp8xh"})[-2].select_one('div._1y6fhhr > span').get_text()
-                #.select_one('._1byskwn > ._162hp8xh > section > span > ._cfvh61 > ._1y6fhhr').find("span").get_text() #얘는 context 한개
-                room_loc_info_dist = abc.find_all("div",{"class","_dc0jge"})#.select_one('._162hp8xh > ._17k42na > ._1btxexp').select('._dc0jge') #얘는 결과값 여러개 = 리스트
+                room_loc_info_cont = main_container.find_all("div",{"class","_162hp8xh"})[-2].select_one('div._1y6fhhr > span').get_text()
+                room_loc_info_dist = main_container.find_all("div",{"class","_dc0jge"})
             
-            try:
-                room_host = abc.select_one('div._1y6fhhr').find("span").get_text()
-            except:
-                room_host = ""
-            print("room_host : " , room_host)
-
-            room_rules_prev = abc.select('div._m9x7bnz > div._f42bxt')
+            room_bed_sort = main_container.select('div._9342og > div._1auxwog')
+            room_bed_sort_cont = main_container.select('div._9342og > div._1a5glfg')
+            room_convenient_facilities = main_container.select('div._19xnuo97 > div._1nlbjeu')
+            room_reviews = main_container.select('div._50mnu4')
+            room_rules_prev = main_container.select('div._m9x7bnz > div._f42bxt')
             try:
                 room_use_rules = room_rules_prev[0].select('div._ud8a1c > div._u827kd')
                 room_safety = room_rules_prev[1].select('div._ud8a1c > div._u827kd')
             except:
                 room_use_rules = []
                 room_safety = []
-            
 
+            # 세부 별점
+            # room_scores_sort = abc.select('div._a3qxec > div._y1ba89')
+            # room_scores_sort_num = abc.select('div._a3qxec > div._bgq2leu > div._4oybiu')
+            # room_rating = take_out_list_two(room_scores_sort, room_scores_sort_num)
+            print()
+            print("URL : ",URL)
+            print('main_title : ',main_title)
+            print('addr : ', addr)
+            print('latlng : ' , latlng)
+            print("room_score : ",room_score)
+            print("room_review_num :", room_review_num)
+            print("isSuperHost : ", isSuperHost)
+            print("sub_title, option : ", sub_title, room_option)
+            picture = extract_pictures(room_pictures)
+            room_notice = take_out_list_two(room_notice_title, room_notice_cont)
+            room_bed = take_out_list_two(room_bed_sort, room_bed_sort_cont)
+            room_rating = {}
+            room_convenient_facility = take_out_list_get_text_div(room_convenient_facilities)
+            room_review = take_out_list_get_review(room_reviews)
+            print("room_host : " , room_host)
             print("room_loc_info_cont : ", room_loc_info_cont)
             room_loc_info_distance = take_out_list_get_text_pre(room_loc_info_dist)
             room_use_rule = take_out_list_get_text_span(room_use_rules)
             room_safety_rule = take_out_list_get_text_span(room_safety)
+            print()
 
             data = {'URL':URL,'main_title':main_title, 'isSuperHost':isSuperHost, 'addr':addr, 'latlng':latlng, 'room_idx':room_idx, 'price':int_price,
                     'room_score':room_score, 'room_review_num':room_review_num, 'sub_title':sub_title,
@@ -217,12 +208,10 @@ def scrape_page(URL, room_idx, price):
                     'room_safety_rule':room_safety_rule , 'room_loc_info_distance':room_loc_info_distance,
                     'room_notice':room_notice, 'room_bed':room_bed, 'room_rating':room_rating}
             data['room_reviews'] = room_review
-            
             driver.quit()
             return data
             
         else:
-            
             print("try again..")
             driver.quit()
 
@@ -239,7 +228,7 @@ def extract_detail(accommodation_infos):
             data = scrape_page(URL, room_idx, price)
             insert_room_data_in_MysqlDB(data)
         else:
-            print("방번호 ", room_idx, "는 이미 저장되어 있습니다.")
+            print(" * 방번호 ", room_idx, "는 이미 저장되어 있습니다.")
 
     db.close()
     conn.close()
