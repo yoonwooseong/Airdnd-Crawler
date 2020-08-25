@@ -13,7 +13,7 @@ os.environ["NLS_LANG"] = ".AL32UTF8"
 conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8')
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
-URL_PARAM = "?adults=1&location=%EA%B4%8C&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
+#URL_PARAM = "?adults=1&location=%EA%B4%8C&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
 take_out_start_index = 0
 db = conn.cursor()
 
@@ -39,7 +39,10 @@ def extract_pictures(room_pictures):
     picture = []
     i = 0
     for pictures in room_pictures:
-        room_picture = pictures.find("img").attrs['src']
+        try:
+            room_picture = pictures.find("img").attrs['src']
+        except:
+            room_picture = "None"
         picture.append(room_picture)
         i += 1
         if i == 5:
@@ -218,13 +221,20 @@ def scrape_page(URL, room_idx, price):
 
 def extract_detail(accommodation_infos):
     room_nums_in_DB = check_room_idx_in_DB()
-    for room_info in accommodation_infos:
+    Query = accommodation_infos['Query']
+    place = Query['place']
+    checkin = Query['checkin']
+    checkout = Query['checkout']
+    adults = Query['adults']
+
+    for room_info in accommodation_infos['room_infos']:
         room_idx = room_info["room_idx"]
 
         #방번호를 검색해 DB에 있는지 체크
         if tuple([int(room_idx)]) not in room_nums_in_DB:
             price = room_info["room_price"]
-            URL = URL_BASE+room_idx+URL_PARAM
+            #URL = URL_BASE+room_idx+URL_PARAM
+            URL = URL_BASE+room_idx+"?adults="+adults+"&location="+place+"&check_in="+checkin+"&check_out="+checkout+"&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
             data = scrape_page(URL, room_idx, price)
             insert_room_data_in_MysqlDB(data)
         else:

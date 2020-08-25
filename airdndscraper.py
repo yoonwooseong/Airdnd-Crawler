@@ -13,7 +13,8 @@ def scrape():
     place = request.args.get('place')
     checkin = request.args.get('checkin')
     checkout = request.args.get('checkout')
-    Query = {'place':place, 'checkin':checkin, 'checkout':checkout}
+    adults = request.args.get('adults')
+    Query = {'place':place, 'checkin':checkin, 'checkout':checkout , 'adults':adults}
     if place:
         accommodation_infos = get_accommodation_infos(Query)
         extract_detail(accommodation_infos)
