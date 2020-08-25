@@ -1,6 +1,6 @@
 import pymysql
 import os
-import requests
+import time
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from urllib.parse import quote_plus
@@ -60,19 +60,22 @@ def take_out_list(extracted_list):
 
 def take_out_list_get_text_pre(extracted_list):
     data_list = []
-    for e_list in extracted_list:               
-        data_list.append(e_list.find_all("div"))
+    for e_list in extracted_list:
+        nearby_attraction, attraction_distance = e_list.find_all("div")            
+        data_list.append([nearby_attraction.string, attraction_distance.string])
     print("data_list : ", data_list)  
     return data_list
 
 def take_out_list_get_review(extracted_list):
     data_list = []
     for e_list in extracted_list:               
-        room_reviews_name = e_list.select('div._1oy2hpi > div._1lc9bb6')
-        room_reviews_cont = e_list.select('div._1y6fhhr > span')
-        data_dict = {'room_reviews_name':room_reviews_name, 'room_reviews_cont':room_reviews_cont}
+        room_reviews_name_date = e_list.select_one('div._1oy2hpi').find("div",{"class", "_1lc9bb6"}, recursive=False).get_text()
+        room_reviews_name = room_reviews_name_date[:room_reviews_name_date.find("년 ")-4]
+        room_reviews_date = e_list.select_one('div._1oy2hpi > div._1lc9bb6 > div').string
+        room_reviews_cont = e_list.select_one('div._1y6fhhr > span').get_text()
+        data_dict = {'room_reviews_name':room_reviews_name, 'room_reviews_date':room_reviews_date ,'room_reviews_cont':room_reviews_cont}
         data_list.append(data_dict)
-    print("data_list : ", data_list)  
+    print("reviews : ", data_list)  
     return data_list
 
 def take_out_list_get_text_div(extracted_list):
@@ -101,15 +104,20 @@ def take_out_list_two(title, content):
 
 def scrape_page(URL, room_idx, price):
     while True:
-        driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver', chrome_options=options)
+        driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver') #, chrome_options=options
+        driver.implicitly_wait(3)
         driver.get(URL)
-        driver.implicitly_wait(5)
+        time.sleep(3)
+        driver.implicitly_wait(15)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(3)
         html = driver.page_source
+        time.sleep(3)
         soup = BeautifulSoup(html, "html.parser")
-        driver.quit()
-        results = soup.select_one('.with-new-header')
-        abc = results.select_one('._1cnse2m')
-        bc = abc.select_one('._mbmcsn')
+        
+        results = soup.select_one('body.with-new-header')
+        abc = results.select_one('div._e296pg')
+        bc = abc.select_one('div._tqmy57')
 
         if price.find('할') == -1:
             price = price[price.find('₩')+1:]
@@ -119,22 +127,22 @@ def scrape_page(URL, room_idx, price):
         
         #크롤링 소스 가져오기
         if bc is not None:
-            main_title = results.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
+            main_title = abc.find("div", {"class","_mbmcsn"}).find("h1").get_text(strip=True)
             print()
             print("URL : ",URL)
             print('main_title : ',main_title)
-            addr = soup.find("a", {"class","_5twioja"}).get_text()
+            addr = results.find("a", {"class","_5twioja"}).get_text()
             print('addr : ', addr)
             latlng = Convert_to_latlng(addr)
             print('latlng : ' , latlng)
             # None일때 오류 방지
-            room_scores = soup.find("span", {"class","_1jpdmc0"})
+            room_scores = abc.find("span", {"class","_1jpdmc0"})
             if room_scores is not None:
                 room_score = room_scores.get_text(strip=True)
             else:
                 room_score = "0.00"
             print("room_score : ",room_score)
-            room_review_nums = soup.find("span", {"class","_1sqnphj"})
+            room_review_nums = abc.find("span", {"class","_1sqnphj"})
             if room_review_nums is not None:
                 room_review_num = room_review_nums.get_text(strip=True)
             else:
@@ -152,45 +160,50 @@ def scrape_page(URL, room_idx, price):
             print("sub, option : ", sub_title, room_option)
             #sub_title = ""
             #room_option = ""
-            room_notice_title = soup.select('._1044tk8 > ._1mqc21n > ._1qsawv5')
-            room_notice_cont = soup.select('._1044tk8 > ._1mqc21n > ._1jlr81g')
+            room_notice_title = abc.select('div._1044tk8 > div._1mqc21n > div._1qsawv5')
+            room_notice_cont = abc.select('div._1044tk8 > div._1mqc21n > div._1jlr81g')
             
-            room_pictures = soup.find_all("div", {"class", "_1h6n1zu"})
-            room_bed_sort = soup.select('._9342og > ._1auxwog')
-            room_bed_sort_cont = soup.select('._9342og > ._1a5glfg')
-            room_convenient_facilities = soup.select('._19xnuo97 > ._1nlbjeu')
-            room_scores_sort = soup.select('._a3qxec > ._y1ba89')
-            room_scores_sort_num = soup.select('._a3qxec > ._bgq2leu > ._4oybiu')
-            room_reviews = soup.select('._50mnu4')
+            room_pictures = abc.find_all("div", {"class", "_1h6n1zu"})
+            room_bed_sort = abc.select('div._9342og > div._1auxwog')
+            room_bed_sort_cont = abc.select('div._9342og > div._1a5glfg')
+            room_convenient_facilities = abc.select('div._19xnuo97 > div._1nlbjeu')
+            #room_scores_sort = abc.select('div._a3qxec > div._y1ba89')
+            #room_scores_sort_num = abc.select('div._a3qxec > div._bgq2leu > div._4oybiu')
+            room_reviews = abc.select('div._50mnu4')
             room_notice = take_out_list_two(room_notice_title, room_notice_cont)
             room_bed = take_out_list_two(room_bed_sort, room_bed_sort_cont)
-            room_rating = take_out_list_two(room_scores_sort, room_scores_sort_num)
+            #room_rating = take_out_list_two(room_scores_sort, room_scores_sort_num)
+            room_rating = {}
             room_convenient_facility = take_out_list_get_text_div(room_convenient_facilities)
             room_review = take_out_list_get_review(room_reviews)
             picture = extract_pictures(room_pictures)
 
             #reqeust로 출력------------------------------------------------------------
 
-            room_loc_info = soup.select('._1cvivhm > ._1byskwn > ._vd6w38n')
-            print('room_loc_info : ' , room_loc_info)
+            room_loc_info = abc.select_one('div._1cvivhm > div._1byskwn > div._vd6w38n')
             #만약 지역 설명이 없으면
-            if len(room_loc_info) == 1:
+            if room_loc_info is not None:
                 room_loc_info_cont = "location content is None"
-                room_loc_info_dist = room_loc_info[0].select('._175nxr3')
+                room_loc_info_dist = room_loc_info.select('div._dc0jge')
             else:
-                room_loc_info_cont = soup.find_all("div",{"class","_zcn96s"})#.find("div", {"class", "_162hp8xh"})
+                room_loc_info_cont = abc.find_all("div",{"class","_162hp8xh"})[-2].select_one('div._1y6fhhr > span').get_text()
                 #.select_one('._1byskwn > ._162hp8xh > section > span > ._cfvh61 > ._1y6fhhr').find("span").get_text() #얘는 context 한개
-                room_loc_info_dist = soup.find_all("div",{"class","_zcn96s"})#.select_one('._162hp8xh > ._17k42na > ._1btxexp').select('._dc0jge') #얘는 결과값 여러개 = 리스트
+                room_loc_info_dist = abc.find_all("div",{"class","_dc0jge"})#.select_one('._162hp8xh > ._17k42na > ._1btxexp').select('._dc0jge') #얘는 결과값 여러개 = 리스트
             
             try:
-                room_host = soup.select_one('._1y6fhhr').find("span").get_text()
+                room_host = abc.select_one('div._1y6fhhr').find("span").get_text()
             except:
                 room_host = ""
             print("room_host : " , room_host)
-            room_rules_prev = soup.select('div._m9x7bnz')
-            print(room_rules_prev)
-            room_use_rules = room_rules_prev[0].select('._ud8a1c > ._u827kd')
-            room_safety = room_rules_prev[1].select('._ud8a1c > ._u827kd')
+
+            room_rules_prev = abc.select('div._m9x7bnz > div._f42bxt')
+            try:
+                room_use_rules = room_rules_prev[0].select('div._ud8a1c > div._u827kd')
+                room_safety = room_rules_prev[1].select('div._ud8a1c > div._u827kd')
+            except:
+                room_use_rules = []
+                room_safety = []
+            
 
             print("room_loc_info_cont : ", room_loc_info_cont)
             room_loc_info_distance = take_out_list_get_text_pre(room_loc_info_dist)
@@ -204,10 +217,14 @@ def scrape_page(URL, room_idx, price):
                     'room_safety_rule':room_safety_rule , 'room_loc_info_distance':room_loc_info_distance,
                     'room_notice':room_notice, 'room_bed':room_bed, 'room_rating':room_rating}
             data['room_reviews'] = room_review
-
+            
+            driver.quit()
             return data
+            
         else:
+            
             print("try again..")
+            driver.quit()
 
 
 def extract_detail(accommodation_infos):
