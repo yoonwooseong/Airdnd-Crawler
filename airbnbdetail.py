@@ -1,6 +1,7 @@
 import pymysql
 import os
 import time
+import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from urllib.parse import quote_plus
@@ -10,7 +11,7 @@ from airbnblatlng import Convert_to_latlng
 os.environ["NLS_LANG"] = ".AL32UTF8"
 
 # DB와 연결된 코드
-conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8')
+conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
 #URL_PARAM = "?adults=1&location=%EA%B4%8C&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
@@ -18,7 +19,7 @@ take_out_start_index = 0
 db = conn.cursor()
 
 def check_room_idx_in_DB(): 
-    sql_select = 'select room_idx from airdnd_room_test'
+    sql_select = 'select home_idx from airdnd_home'
     db.execute(sql_select)
     room_nums_in_DB = db.fetchall()
     return room_nums_in_DB
@@ -26,11 +27,12 @@ def check_room_idx_in_DB():
 def insert_room_data_in_MysqlDB(data):
     print(data['room_idx'])
     #DB에 접근하기 위한 쿼리문
-    sql_insert =  'insert into airdnd_room_test (room_idx, room_name, room_price, room_score, room_review_num, room_type, room_option) VALUES (%s, %s, %s, %s, %s, %s, %s)'
-    val = (data['room_idx'], data['main_title'].encode('utf8').decode('utf8'), data['price'],
-                    data['room_score'].encode('utf8').decode('utf8'), data['room_review_num'].encode('utf8').decode('utf8'),
-                    data['sub_title'].encode('utf8').decode('utf8'), data['room_option'].encode('utf8').decode('utf8'))
-    
+    sql_insert =  'insert into airdnd_home (home_idx, place, title, score, review_num, isSuperHost, addr, lat, lng, sub_title, filter_max_person, filter_bedroom, filter_bed, filter_bathroom, price, host_notice, loc_info) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    val = (data['room_idx'], data['place'].encode('utf8').decode('utf8'), data['main_title'].encode('utf8').decode('utf8'),
+            data['room_score'], data['room_review_num'], data['isSuperHost'], data['addr'].encode('utf8').decode('utf8'),
+            data['latlng']['lat'], data['latlng']['lng'], data['sub_title'].encode('utf8').decode('utf8'), data['room_filter_max_person'],
+            data['room_filter_bedroom'], data['room_filter_bed'], data['room_filter_bathroom'], data['price'],
+            data['room_host'].encode('utf8').decode('utf8'), data['room_loc_info_cont'].encode('utf8').decode('utf8'))
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공")
@@ -101,7 +103,7 @@ def take_out_list_two(title, content):
     print("data_dict : ", data_dict)  
     return data_dict
 
-def scrape_page(URL, room_idx, price):
+def scrape_page(URL, room_idx, price, place):
     while True:
         driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver')
         driver.implicitly_wait(3)
@@ -134,13 +136,17 @@ def scrape_page(URL, room_idx, price):
             room_scores = main_container.find("span", {"class","_1jpdmc0"})
             if room_scores is not None:
                 room_score = room_scores.get_text(strip=True)
+                room_score = float(room_score)
             else:
-                room_score = "0.00"
+                room_score = 0.00
             room_review_nums = main_container.find("span", {"class","_1sqnphj"})
             if room_review_nums is not None:
                 room_review_num = room_review_nums.get_text(strip=True)
+                room_review_num2 = str(room_review_num).replace("(", "").replace(")", "")
+                room_review_num = int(room_review_num2)
             else:
-                room_review_num = "(0)"
+                room_review_num = 0
+
             try:
                 soup.select('._nu65sd')[1].find("span")
                 isSuperHost = True
@@ -149,6 +155,16 @@ def scrape_page(URL, room_idx, price):
             sub_titles , room_options = results.find("div", {"class", "_tqmy57"}).find_all("div", recursive=False)
             sub_title = sub_titles.get_text(strip=True)
             room_option = room_options.get_text(strip=True)
+            room_filter = room_option.split('·')
+            room_max_person = room_filter[0]
+            room_filter_max_person = int(room_max_person[room_max_person.find('최대 인원 ')+6:room_max_person.find('명')])
+            room_bedroom = room_filter[1]
+            room_filter_bedroom = int(room_bedroom[room_bedroom.find('침실 ')+3:room_bedroom.find('개')])
+            room_bed = room_filter[2]
+            room_filter_bed = int(room_bed[room_bed.find('침대 ')+3:room_bed.find('개')])
+            room_bathroom = room_filter[3]
+            room_filter_bathroom = float(room_bathroom[room_bathroom.find('욕실 ')+3:room_bathroom.find('개')])
+
             room_pictures = main_container.find_all("div", {"class", "_1h6n1zu"})
             room_notice_title = main_container.select('div._1044tk8 > div._1mqc21n > div._1qsawv5')
             room_notice_cont = main_container.select('div._1044tk8 > div._1mqc21n > div._1jlr81g')
@@ -187,10 +203,11 @@ def scrape_page(URL, room_idx, price):
             print('main_title : ',main_title)
             print('addr : ', addr)
             print('latlng : ' , latlng)
-            print("room_score : ",room_score)
+            print("room_score : ", room_score)
             print("room_review_num :", room_review_num)
             print("isSuperHost : ", isSuperHost)
-            print("sub_title, option : ", sub_title, room_option)
+            print("sub_title : ", sub_title)
+            print("option : ",room_filter_max_person , room_filter_bedroom, room_filter_bed, room_filter_bathroom)
             picture = extract_pictures(room_pictures)
             room_notice = take_out_list_two(room_notice_title, room_notice_cont)
             room_bed = take_out_list_two(room_bed_sort, room_bed_sort_cont)
@@ -205,10 +222,10 @@ def scrape_page(URL, room_idx, price):
             print()
 
             data = {'URL':URL,'main_title':main_title, 'isSuperHost':isSuperHost, 'addr':addr, 'latlng':latlng, 'room_idx':room_idx, 'price':int_price,
-                    'room_score':room_score, 'room_review_num':room_review_num, 'sub_title':sub_title,
-                    'room_option':room_option, 'room_host':room_host, 'room_loc_info_cont':room_loc_info_cont,
-                    'picture':picture, 'room_convenient_facility':room_convenient_facility , 'room_use_rule':room_use_rule,
-                    'room_safety_rule':room_safety_rule , 'room_loc_info_distance':room_loc_info_distance,
+                    'room_score':room_score, 'room_review_num':room_review_num, 'sub_title':sub_title, 'room_filter_max_person':room_filter_max_person,
+                    'room_filter_bedroom':room_filter_bedroom, 'room_filter_bed':room_filter_bed, 'room_filter_bathroom':room_filter_bathroom, 'room_host':room_host, 
+                    'room_loc_info_cont':room_loc_info_cont, 'picture':picture, 'room_convenient_facility':room_convenient_facility, 'room_use_rule':room_use_rule,
+                    'room_safety_rule':room_safety_rule , 'room_loc_info_distance':room_loc_info_distance, 'place':place,
                     'room_notice':room_notice, 'room_bed':room_bed, 'room_rating':room_rating}
             data['room_reviews'] = room_review
             driver.quit()
@@ -235,7 +252,7 @@ def extract_detail(accommodation_infos):
             price = room_info["room_price"]
             #URL = URL_BASE+room_idx+URL_PARAM
             URL = URL_BASE+room_idx+"?adults="+adults+"&location="+place+"&check_in="+checkin+"&check_out="+checkout+"&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
-            data = scrape_page(URL, room_idx, price)
+            data = scrape_page(URL, room_idx, price, place)
             insert_room_data_in_MysqlDB(data)
         else:
             print(" * 방번호 ", room_idx, "는 이미 저장되어 있습니다.")
