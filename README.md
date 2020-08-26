@@ -11,9 +11,9 @@
 ## 사용 예제
 
 airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 접속한다. 실행시 첫 화면(home.html)이다.
-<img src="https://user-images.githubusercontent.com/57824259/91246721-92f19e00-e78b-11ea-8444-e29a5b89c477.png" alt="home" width="700" height="400"/>  
+<img src="https://user-images.githubusercontent.com/57824259/91246721-92f19e00-e78b-11ea-8444-e29a5b89c477.png" alt="home" width="600"/>  
 해당 검색창에 각 조건을 입력해 Search 버튼을 클릭한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91246723-9422cb00-e78b-11ea-950f-b9b96a4afdf9.png" alt="home search" width="700" height="400"/>
+<img src="https://user-images.githubusercontent.com/57824259/91246723-9422cb00-e78b-11ea-950f-b9b96a4afdf9.png" alt="home search" width="600"/>
 
 아래와 같이 스크래핑을 print하고 DB에 저장한다.  
 
