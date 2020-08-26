@@ -42,7 +42,7 @@ pip install bs4
 
 MIT 라이센스를 준수하며 ``LICENSE``에서 자세한 정보를 확인할 수 있습니다.
 
-[https://github.com/yoonwooseong/github-link](https://github.com/dbader/)
+[https://github.com/yoonwooseong/github-link](https://github.com/yoonwooseong/)
 
 ## 기여 방법
 
