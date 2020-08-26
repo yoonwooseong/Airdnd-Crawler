@@ -1,72 +1,57 @@
 # web-scraper
-> *Airdnd*(DEVengersAssemble Airbnb clone cording)에 필요한 데이터들을 가져오기 위해 web-scraper개발
+> -Airdnd-(DEVengersAssemble Airbnb clone cording)에 필요한 데이터들을 가져오기 위해 web-scraper개발
 
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
+해당 web-scraper는 airbnb 숙소정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위한 Selenium과 BeautifulSoup4를 사용해 스크래핑을 하였고 프레임워크는 Flask framework를 사용하였다. 스크랩후에 pymysql로 MySQL에 저장한다.
 
-해당 web-scraper는 airbnb 숙소정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위한 Selenium과 Flask framework를 사용하였고 pymysql로 MySQL에 저장한다.
-
-![]()
-
-## 설치 방법
-
-OS X & 리눅스:
-
-```sh
-npm install my-crazy-module --save
-```
-
-윈도우:
-
-```sh
-edit autoexec.bat
-```
+### Use
+![Flask](https://user-images.githubusercontent.com/57824259/91246509-f4fdd380-e78a-11ea-86f6-1f2ed5aa9e74.png)
+![Python](https://user-images.githubusercontent.com/57824259/91246511-f6c79700-e78a-11ea-8c45-d9561831cf8c.png)
 
 ## 사용 예제
 
-스크린 샷과 코드 예제를 통해 사용 방법을 자세히 설명합니다.
+airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 접속한다.
 
-_더 많은 예제와 사용법은 [Wiki][wiki]를 참고하세요._
+실행시 첫 화면(home.html)이다.
+![home](https://user-images.githubusercontent.com/57824259/91246721-92f19e00-e78b-11ea-8444-e29a5b89c477.png)
+
+해당 검색창에 각 조건을 입력해 Search 버튼을 클릭한다.
+![home search](https://user-images.githubusercontent.com/57824259/91246723-9422cb00-e78b-11ea-950f-b9b96a4afdf9.png)
+
+아래와 같이 스크래핑을 print하고 DB에 저장한다.
+
+스크래핑이 완료되면 해당 화면(scrapepage.html)으로 이동한다.
 
 ## 개발 환경 설정
 
-모든 개발 의존성 설치 방법과 자동 테스트 슈트 실행 방법을 운영체제 별로 작성합니다.
-
 ```sh
-make install
-npm test
+pip install pymysql --DB
+pip install selenium
+pip install flask --framework
+pip install bs4
 ```
 
 ## 업데이트 내역
 
-* 0.2.1
-    * 수정: 문서 업데이트 (모듈 코드 동일)
-* 0.2.0
-    * 수정: `setDefaultXYZ()` 메서드 제거
-    * 추가: `init()` 메서드 추가
-* 0.1.1
-    * 버그 수정: `baz()` 메서드 호출 시 부팅되지 않는 현상 (@컨트리뷰터 감사합니다!)
 * 0.1.0
     * 첫 출시
-    * 수정: `foo()` 메서드 네이밍을 `bar()`로 수정
+    * issue : host 당부의 말에 이모트를 넣을 시 오류. ( -utf8mb4-로 전환 필요 )
 * 0.0.1
     * 작업 진행 중
 
 ## 정보
 
-이름 – [@트위터 주소](https://twitter.com/dbader_org) – 이메일주소@example.com
+윤우성 –  dntjd851@naver.com
 
-XYZ 라이센스를 준수하며 ``LICENSE``에서 자세한 정보를 확인할 수 있습니다.
+MIT 라이센스를 준수하며 ``LICENSE``에서 자세한 정보를 확인할 수 있습니다.
 
-[https://github.com/yourname/github-link](https://github.com/dbader/)
+[https://github.com/yoonwooseong/github-link](https://github.com/dbader/)
 
 ## 기여 방법
 
 1. (<https://github.com/yourname/yourproject/fork>)을 포크합니다.
-2. (`git checkout -b feature/fooBar`) 명령어로 새 브랜치를 만드세요.
-3. (`git commit -am 'Add some fooBar'`) 명령어로 커밋하세요.
-4. (`git push origin feature/fooBar`) 명령어로 브랜치에 푸시하세요. 
+2. (`git checkout -b feature`) 명령어로 새 브랜치를 만드세요.
+3. (`git commit -am 'Add some'`) 명령어로 커밋하세요.
+4. (`git push origin feature`) 명령어로 브랜치에 푸시하세요. 
 5. 풀리퀘스트를 보내주세요.
 
 <!-- Markdown link & img dfn's -->
