@@ -35,7 +35,16 @@ def insert_room_data_in_MysqlDB(data):
             data['room_host'].encode('utf8').decode('utf8'), data['room_loc_info_cont'].encode('utf8').decode('utf8'))
     db.execute(sql_insert, val)
     conn.commit()
-    print("DB저장 성공")
+    print("DB저장 성공 - airdnd_home")
+
+def insert_room_data_in_airdnd_picture(data):
+    print(data['room_idx'])
+    #DB에 접근하기 위한 쿼리문
+    sql_insert =  'insert into airdnd_picture (idx, home_idx, url) VALUES (0, %s, %s)'
+    val = (data['room_idx'], data['URL'].encode('utf8').decode('utf8'))
+    db.execute(sql_insert, val)
+    conn.commit()
+    print("DB저장 성공 - airdnd_picture")
 
 def extract_pictures(room_pictures):
     picture = []
@@ -142,8 +151,12 @@ def scrape_page(URL, room_idx, price, place):
             room_review_nums = main_container.find("span", {"class","_1sqnphj"})
             if room_review_nums is not None:
                 room_review_num = room_review_nums.get_text(strip=True)
-                room_review_num2 = str(room_review_num).replace("(", "").replace(")", "")
-                room_review_num = int(room_review_num2)
+                try:
+                    room_review_num2 = str(room_review_num).replace("(", "").replace(")", "")
+                    room_review_num = int(room_review_num2)
+                except:
+                    room_review_num2 = str(room_review_num).replace("후기 ", "").replace("개", "")
+                    room_review_num = int(room_review_num2)
             else:
                 room_review_num = 0
 
@@ -159,7 +172,11 @@ def scrape_page(URL, room_idx, price, place):
             room_max_person = room_filter[0]
             room_filter_max_person = int(room_max_person[room_max_person.find('최대 인원 ')+6:room_max_person.find('명')])
             room_bedroom = room_filter[1]
-            room_filter_bedroom = int(room_bedroom[room_bedroom.find('침실 ')+3:room_bedroom.find('개')])
+            try:
+                room_filter_bedroom = int(room_bedroom[room_bedroom.find('침실 ')+3:room_bedroom.find('개')])
+            except:
+                room_filter_bedroom = 0;#원룸
+            
             room_bed = room_filter[2]
             room_filter_bed = int(room_bed[room_bed.find('침대 ')+3:room_bed.find('개')])
             room_bathroom = room_filter[3]
