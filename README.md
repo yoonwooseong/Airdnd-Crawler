@@ -7,7 +7,7 @@
 
 해당 web-scraper는 airbnb 숙소정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위한 Selenium과 Flask framework를 사용하였고 pymysql로 MySQL에 저장한다.
 
-![](https://user-images.githubusercontent.com/57824259/87865507-50c98580-c9b1-11ea-8a8a-a342742edc6c.png)
+![]()
 
 ## 설치 방법
 
