@@ -7,6 +7,14 @@ create table airdnd_picture(
 	PRIMARY KEY(idx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+create table airdnd_home_notice(
+	idx int(9) NOT NULL auto_increment,
+	home_idx int(9) NOT NULL,
+	home_notice_sort VARCHAR(100) NOT NULL,
+    home_notice_content VARCHAR(300) NOT NULL,
+	PRIMARY KEY(idx)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 create table airdnd_convenient_facility(
 	idx int(9) NOT NULL auto_increment,
 	home_idx int(9) NOT NULL,
@@ -57,5 +65,15 @@ create table airdnd_bed(
 	bed_room_option VARCHAR(200) NOT NULL,
 	PRIMARY KEY(idx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+truncate table airdnd_home;
+truncate table airdnd_home_attractions_distance;
+truncate table airdnd_home_bed;
+truncate table airdnd_home_convenient_facility;
+truncate table airdnd_home_notice;
+truncate table airdnd_home_picture;
+truncate table airdnd_home_review;
+truncate table airdnd_home_safety_rule;
+truncate table airdnd_home_use_rule;
 
 commit;
