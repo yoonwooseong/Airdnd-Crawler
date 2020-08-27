@@ -27,10 +27,10 @@ def check_room_idx_in_DB():
 def insert_room_data_in_MysqlDB(data):
     print(data['room_idx'])
     #DB에 접근하기 위한 쿼리문
-    sql_insert =  'insert into airdnd_home (home_idx, place, title, score, review_num, isSuperHost, addr, lat, lng, sub_title, filter_max_person, filter_bedroom, filter_bed, filter_bathroom, price, host_notice, loc_info) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    sql_insert =  'insert into airdnd_home (home_idx, place, title, isSuperHost, addr, lat, lng, sub_title, filter_max_person, filter_bedroom, filter_bed, filter_bathroom, price, host_notice, loc_info) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
     val = (data['room_idx'], data['place'].encode('utf8').decode('utf8'), data['main_title'].encode('utf8').decode('utf8'),
-            data['room_score'], data['room_review_num'], data['isSuperHost'], data['addr'].encode('utf8').decode('utf8'),
-            data['latlng']['lat'], data['latlng']['lng'], data['sub_title'].encode('utf8').decode('utf8'), data['room_filter_max_person'],
+            data['isSuperHost'], data['addr'].encode('utf8').decode('utf8'), data['latlng']['lat'],
+            data['latlng']['lng'], data['sub_title'].encode('utf8').decode('utf8'), data['room_filter_max_person'],
             data['room_filter_bedroom'], data['room_filter_bed'], data['room_filter_bathroom'], data['price'],
             data['room_host'].encode('utf8').decode('utf8'), data['room_loc_info_cont'].encode('utf8').decode('utf8'))
     db.execute(sql_insert, val)
@@ -46,7 +46,7 @@ def insert_room_data_in_airdnd_home_picture(room_idx, room_picture):
 
 def insert_room_data_in_airdnd_home_notice(room_idx, room_notice_sort, room_notice_content):
     sql_insert =  'insert into airdnd_home_notice (idx, home_idx, home_notice_sort, home_notice_content) VALUES (0, %s, %s, %s)'
-    val = (room_idx, room_notice_sort.encode('utf8').decode('utf8'), room_notice_content.encode('utf8').decode('utf8'))
+    val = (room_idx, room_notice_sort, room_notice_content)
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공 - airdnd_home_notice")
@@ -66,8 +66,9 @@ def insert_room_data_in_airdnd_home_convenient_facility(room_idx, convenient_fac
     print("DB저장 성공 - airdnd_convenient_facility")
 
 def insert_room_data_in_airdnd_home_review(room_idx, review_dic):
-    sql_insert =  'insert into airdnd_home_review (idx, home_idx, user_name, review_date, review_content) VALUES (0, %s, %s, %s, %s)'
-    val = (room_idx, review_dic['room_reviews_name'], review_dic['room_reviews_date'], review_dic['room_reviews_cont'])
+    sql_insert =  'insert into airdnd_home_review (idx, home_idx, user_name, review_date, review_content, room_cleanliness, room_accuracy, room_communication, room_position, room_checkin, room_cost_effectiveness) VALUES (0, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    val = (room_idx, review_dic['room_reviews_name'], review_dic['room_reviews_date'], review_dic['room_reviews_cont'], review_dic['room_cleanliness'], 
+                review_dic['room_communication'], review_dic['room_position'], review_dic['room_accuracy'], review_dic['room_checkin'], review_dic['room_cost_effectiveness'])
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공 - airdnd_review")
@@ -113,7 +114,7 @@ def extract_home_notice(room_idx, notice_sort, content):
     take_out_start_index = 0
     for f_list in notice_sort:
         data_in_list = [f_list.string, content[take_out_start_index].string]
-        insert_room_data_in_airdnd_home_notice(room_idx, f_list.string, content[take_out_start_index].string)
+        insert_room_data_in_airdnd_home_notice(room_idx, f_list.string, content[take_out_start_index].get_text().replace("자세히 알아보기",""))
         data_out_list.append(data_in_list)
         take_out_start_index += 1
     take_out_start_index = 0
@@ -141,15 +142,23 @@ def extract_convenient_facility(room_idx, convenient_facilities):
     print("data_list : ", data_list)
     return data_list
 
-def extract_review(room_idx, extracted_list):
+def extract_review(room_idx, extracted_list, room_rating):
     data_list = []
     for e_list in extracted_list:               
         room_reviews_name_date = e_list.select_one('div._1oy2hpi').find("div",{"class", "_1lc9bb6"}, recursive=False).get_text()
         room_reviews_name = room_reviews_name_date[:room_reviews_name_date.find("년 ")-4]
         room_reviews_date = e_list.select_one('div._1oy2hpi > div._1lc9bb6 > div').string
         room_reviews_cont = e_list.select_one('div._1y6fhhr > span').get_text()
+        room_cleanliness = room_rating[0]
+        room_accuracy = room_rating[1]
+        room_communication = room_rating[2]
+        room_position = room_rating[3]
+        room_checkin = room_rating[4]
+        room_cost_effectiveness = room_rating[5]
 
-        review_dic = {'room_reviews_name':room_reviews_name, 'room_reviews_date':room_reviews_date ,'room_reviews_cont':room_reviews_cont}
+        review_dic = {'room_reviews_name':room_reviews_name, 'room_reviews_date':room_reviews_date ,'room_reviews_cont':room_reviews_cont, 
+                    'room_cleanliness':room_cleanliness, 'room_accuracy':room_accuracy, 'room_communication':room_communication, 'room_position':room_position,
+                    'room_checkin':room_checkin, 'room_cost_effectiveness':room_cost_effectiveness}
         insert_room_data_in_airdnd_home_review(room_idx, review_dic)
         data_list.append(review_dic)
     print("reviews : ", data_list)  
@@ -184,12 +193,13 @@ def extract_safety_rule(room_idx, room_safety):
     print("data_list : ", data_list)  
     return data_list
 
-#def take_out_list(room_idx, extracted_list):
-#    data_list = []
-#    for e_list in extracted_list:
-#        data_list.append(e_list.string)
-#    print("data_list : ", data_list)
-#    return data_list
+def extract_rating(room_idx, room_rating_num):
+    data_list = []
+    for e_list in room_rating_num:
+        rating = float(e_list.string)
+        data_list.append(rating)
+    print("data_list : ", data_list)
+    return data_list
 
 def scrape_page(URL, room_idx, price, place):
     while True:
@@ -254,7 +264,7 @@ def scrape_page(URL, room_idx, price, place):
             try:
                 room_filter_bedroom = int(room_bedroom[room_bedroom.find('침실 ')+3:room_bedroom.find('개')])
             except:
-                room_filter_bedroom = 0;#원룸
+                room_filter_bedroom = 0; #원룸
             
             room_bed = room_filter[2]
             room_filter_bed = int(room_bed[room_bed.find('침대 ')+3:room_bed.find('개')])
@@ -291,9 +301,9 @@ def scrape_page(URL, room_idx, price, place):
                 room_safety = []
 
             # 세부 별점
-            # room_scores_sort = abc.select('div._a3qxec > div._y1ba89')
-            # room_scores_sort_num = abc.select('div._a3qxec > div._bgq2leu > div._4oybiu')
-            # room_rating = take_out_list_two(room_scores_sort, room_scores_sort_num)
+            room_rating_num = main_container.select('div._a3qxec > div._bgq2leu > span._4oybiu')
+            room_rating = extract_rating(room_idx, room_rating_num)
+            
             print()
             print("URL : ",URL)
             print('main_title : ',main_title)
@@ -310,7 +320,7 @@ def scrape_page(URL, room_idx, price, place):
             room_notice = extract_home_notice(room_idx, room_notice_title, room_notice_cont)
             room_bed = extract_home_bed(room_idx, room_bed_sort, room_bed_sort_cont)
             room_convenient_facility = extract_convenient_facility(room_idx, room_convenient_facilities)
-            room_review = extract_review(room_idx, room_reviews)
+            room_review = extract_review(room_idx, room_reviews, room_rating)
             room_loc_info_distance = extract_loc_info_distance(room_idx, room_loc_info_dist)
             room_use_rule = extract_use_rule(room_idx, room_use_rules)
             room_safety_rule = extract_safety_rule(room_idx, room_safety)

@@ -76,4 +76,16 @@ truncate table airdnd_home_review;
 truncate table airdnd_home_safety_rule;
 truncate table airdnd_home_use_rule;
 
+
+delete from AirdndDB.airdnd_home where home_idx = 41319274;
+delete from AirdndDB.airdnd_home_attractions_distance where home_idx = 41319274;
+delete from AirdndDB.airdnd_home_bed where home_idx = 41319274;
+delete from AirdndDB.airdnd_home_convenient_facility where home_idx = 41319274;
+delete from AirdndDB.airdnd_home_notice where home_idx = 41319274;
+delete from AirdndDB.airdnd_home_picture where home_idx = 41319274;
+delete from AirdndDB.airdnd_home_review where home_idx = 41319274;
+delete from AirdndDB.airdnd_home_safety_rule where home_idx = 41319274;
+delete from AirdndDB.airdnd_home_use_rule where home_idx = 41319274;
+
+
 commit;
