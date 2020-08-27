@@ -44,9 +44,9 @@ def insert_room_data_in_airdnd_home_picture(room_idx, room_picture):
     conn.commit()
     print("DB저장 성공 - airdnd_picture")
 
-def insert_room_data_in_airdnd_home_notice(room_idx, room_notice_sort, room_notice_content):
-    sql_insert =  'insert into airdnd_home_notice (idx, home_idx, home_notice_sort, home_notice_content) VALUES (0, %s, %s, %s)'
-    val = (room_idx, room_notice_sort, room_notice_content)
+def insert_room_data_in_airdnd_home_notice(room_idx, room_notice_sort, room_notice_content, room_notice_icon):
+    sql_insert =  'insert into airdnd_home_notice (idx, home_idx, home_notice_sort, home_notice_content, home_notice_icon) VALUES (0, %s, %s, %s, %s)'
+    val = (room_idx, room_notice_sort, room_notice_content, room_notice_icon)
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공 - airdnd_home_notice")
@@ -109,12 +109,12 @@ def extract_pictures(room_idx, room_pictures):
             print("picture : ", picture)
             return picture
 
-def extract_home_notice(room_idx, notice_sort, content):
+def extract_home_notice(room_idx, notice_sort, content, notice_icon):
     data_out_list = []
     take_out_start_index = 0
     for f_list in notice_sort:
-        data_in_list = [f_list.string, content[take_out_start_index].string]
-        insert_room_data_in_airdnd_home_notice(room_idx, f_list.string, content[take_out_start_index].get_text().replace("자세히 알아보기",""))
+        data_in_list = [f_list.string, content[take_out_start_index].get_text().replace("자세히 알아보기",""), notice_icon[take_out_start_index].attrs['d']]
+        insert_room_data_in_airdnd_home_notice(room_idx, f_list.string, content[take_out_start_index].get_text().replace("자세히 알아보기",""), notice_icon[take_out_start_index].attrs['d'])
         data_out_list.append(data_in_list)
         take_out_start_index += 1
     take_out_start_index = 0
@@ -149,6 +149,7 @@ def extract_review(room_idx, extracted_list, room_rating):
         room_reviews_name = room_reviews_name_date[:room_reviews_name_date.find("년 ")-4]
         room_reviews_date = e_list.select_one('div._1oy2hpi > div._1lc9bb6 > div').string
         room_reviews_cont = e_list.select_one('div._1y6fhhr > span').get_text()
+
         room_cleanliness = room_rating[0]
         room_accuracy = room_rating[1]
         room_communication = room_rating[2]
@@ -198,6 +199,8 @@ def extract_rating(room_idx, room_rating_num):
     for e_list in room_rating_num:
         rating = float(e_list.string)
         data_list.append(rating)
+    if len(data_list) == 0:
+        data_list = [0, 0, 0, 0, 0, 0]
     print("data_list : ", data_list)
     return data_list
 
@@ -274,6 +277,8 @@ def scrape_page(URL, room_idx, price, place):
             room_pictures = main_container.find_all("div", {"class", "_1h6n1zu"})
             room_notice_title = main_container.select('div._1044tk8 > div._1mqc21n > div._1qsawv5')
             room_notice_cont = main_container.select('div._1044tk8 > div._1mqc21n > div._1jlr81g')
+            room_notice_icon = main_container.select('div._1044tk8 > div._fz3zdn > svg > path')
+            #print(room_notice_icon[0].attrs['d'])
             try:
                 room_host = main_container.select_one('div._1y6fhhr').find("span").get_text()
             except:
@@ -317,7 +322,7 @@ def scrape_page(URL, room_idx, price, place):
             print("room_host : " , room_host)
             print("room_loc_info_cont : ", room_loc_info_cont)
             picture = extract_pictures(room_idx, room_pictures)
-            room_notice = extract_home_notice(room_idx, room_notice_title, room_notice_cont)
+            room_notice = extract_home_notice(room_idx, room_notice_title, room_notice_cont, room_notice_icon)
             room_bed = extract_home_bed(room_idx, room_bed_sort, room_bed_sort_cont)
             room_convenient_facility = extract_convenient_facility(room_idx, room_convenient_facilities)
             room_review = extract_review(room_idx, room_reviews, room_rating)
