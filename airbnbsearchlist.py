@@ -6,7 +6,7 @@ URL_BASE = "https://www.airbnb.co.kr/s/"
 #adults=1&children=0&infants=0
 
 def get_last_page():
-    set_last_page = 1
+    set_last_page = 2
     return int(set_last_page)
 
 def extract_room_idx(last_page, Query):

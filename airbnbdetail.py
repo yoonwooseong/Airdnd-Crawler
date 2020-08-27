@@ -51,16 +51,16 @@ def insert_room_data_in_airdnd_home_notice(room_idx, room_notice_sort, room_noti
     conn.commit()
     print("DB저장 성공 - airdnd_home_notice")
 
-def insert_room_data_in_airdnd_home_bed(room_idx, bed_room_name, bed_room_option):
-    sql_insert =  'insert into airdnd_home_bed (idx, home_idx, bed_room_name, bed_room_option) VALUES (0, %s, %s, %s)'
-    val = (room_idx, bed_room_name.encode('utf8').decode('utf8'), bed_room_option.encode('utf8').decode('utf8'))
+def insert_room_data_in_airdnd_home_bed(room_idx, bed_room_name, bed_room_option, icon_str):
+    sql_insert =  'insert into airdnd_home_bed (idx, home_idx, bed_room_name, bed_room_option, bed_icons) VALUES (0, %s, %s, %s, %s)'
+    val = (room_idx, bed_room_name.encode('utf8').decode('utf8'), bed_room_option.encode('utf8').decode('utf8'), icon_str)
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공 - airdnd_bed")
 
-def insert_room_data_in_airdnd_home_convenient_facility(room_idx, convenient_facilitiy):
-    sql_insert =  'insert into airdnd_home_convenient_facility (idx, home_idx, facility) VALUES (0, %s, %s)'
-    val = (room_idx, convenient_facilitiy.encode('utf8').decode('utf8'))
+def insert_room_data_in_airdnd_home_convenient_facility(room_idx, convenient_facilitiy, room_convenient_facility_icon):
+    sql_insert =  'insert into airdnd_home_convenient_facility (idx, home_idx, facility, facility_icon) VALUES (0, %s, %s, %s)'
+    val = (room_idx, convenient_facilitiy.encode('utf8').decode('utf8'), room_convenient_facility_icon)
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공 - airdnd_convenient_facility")
@@ -121,12 +121,15 @@ def extract_home_notice(room_idx, notice_sort, content, notice_icon):
     print("data_list : ", data_out_list)  
     return data_out_list
 
-def extract_home_bed(room_idx, bed_sort, content):
+def extract_home_bed(room_idx, bed_sort, content, bed_sort_icon): #print(room_bed_sort_icon[0].select_one('svg > path').attrs['d'])
     data_out_list = []
     take_out_start_index = 0
+    icon_str = ""
     for f_list in bed_sort:
-        data_in_list = [f_list.string, content[take_out_start_index].string]
-        insert_room_data_in_airdnd_home_bed(room_idx, f_list.string, content[take_out_start_index].string)
+        for icon_list in bed_sort_icon[take_out_start_index].select('span._14tkmhr'):
+            icon_str += icon_list.select_one('svg > path').attrs['d'] + "/"
+        data_in_list = [f_list.string, content[take_out_start_index].string, icon_str]
+        insert_room_data_in_airdnd_home_bed(room_idx, f_list.string, content[take_out_start_index].string, icon_str)
         data_out_list.append(data_in_list)
         take_out_start_index += 1
     take_out_start_index = 0
@@ -135,10 +138,12 @@ def extract_home_bed(room_idx, bed_sort, content):
 
 def extract_convenient_facility(room_idx, convenient_facilities):
     data_list = []
+
     for e_list in convenient_facilities:
         convenient_facilitiy = e_list.find("div").get_text()
-        insert_room_data_in_airdnd_home_convenient_facility(room_idx, convenient_facilitiy)         
-        data_list.append(convenient_facilitiy)
+        room_convenient_facility_icon = e_list.select_one('div._yp1t7a > svg > path').attrs['d']
+        insert_room_data_in_airdnd_home_convenient_facility(room_idx, convenient_facilitiy, room_convenient_facility_icon)         
+        data_list.append([convenient_facilitiy, room_convenient_facility_icon])
     print("data_list : ", data_list)
     return data_list
 
@@ -261,16 +266,16 @@ def scrape_page(URL, room_idx, price, place):
             sub_title = sub_titles.get_text(strip=True)
             room_option = room_options.get_text(strip=True)
             room_filter = room_option.split('·')
-            room_max_person = room_filter[0]
-            room_filter_max_person = int(room_max_person[room_max_person.find('최대 인원 ')+6:room_max_person.find('명')])
-            room_bedroom = room_filter[1]
+            room_max_person_n = room_filter[0]
+            room_filter_max_person = int(room_max_person_n[room_max_person_n.find('최대 인원 ')+6:room_max_person_n.find('명')])
+            room_bedroom_n = room_filter[1]
             try:
-                room_filter_bedroom = int(room_bedroom[room_bedroom.find('침실 ')+3:room_bedroom.find('개')])
+                room_filter_bedroom = int(room_bedroom_n[room_bedroom_n.find('침실 ')+3:room_bedroom_n.find('개')])
             except:
                 room_filter_bedroom = 0; #원룸
             
-            room_bed = room_filter[2]
-            room_filter_bed = int(room_bed[room_bed.find('침대 ')+3:room_bed.find('개')])
+            room_bed_n = room_filter[2]
+            room_filter_bed = int(room_bed_n[room_bed_n.find('침대 ')+3:room_bed_n.find('개')])
             room_bathroom = room_filter[3]
             room_filter_bathroom = float(room_bathroom[room_bathroom.find('욕실 ')+3:room_bathroom.find('개')])
 
@@ -295,7 +300,11 @@ def scrape_page(URL, room_idx, price, place):
             
             room_bed_sort = main_container.select('div._9342og > div._1auxwog')
             room_bed_sort_cont = main_container.select('div._9342og > div._1a5glfg')
+            room_bed_sort_icon = main_container.select('div._9342og > div._p03egf')
+            #print(room_bed_sort_icon[0].select_one('svg > path').attrs['d'])
+
             room_convenient_facilities = main_container.select('div._19xnuo97 > div._1nlbjeu')
+            
             room_reviews = main_container.select('div._50mnu4')
             room_rules_prev = main_container.select('div._m9x7bnz > div._f42bxt')
             try:
@@ -323,7 +332,7 @@ def scrape_page(URL, room_idx, price, place):
             print("room_loc_info_cont : ", room_loc_info_cont)
             picture = extract_pictures(room_idx, room_pictures)
             room_notice = extract_home_notice(room_idx, room_notice_title, room_notice_cont, room_notice_icon)
-            room_bed = extract_home_bed(room_idx, room_bed_sort, room_bed_sort_cont)
+            room_bed = extract_home_bed(room_idx, room_bed_sort, room_bed_sort_cont, room_bed_sort_icon)
             room_convenient_facility = extract_convenient_facility(room_idx, room_convenient_facilities)
             room_review = extract_review(room_idx, room_reviews, room_rating)
             room_loc_info_distance = extract_loc_info_distance(room_idx, room_loc_info_dist)
