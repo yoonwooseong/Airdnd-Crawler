@@ -27,10 +27,10 @@ def check_room_idx_in_DB():
 def insert_room_data_in_MysqlDB(data):
     print(data['room_idx'])
     #DB에 접근하기 위한 쿼리문
-    sql_insert =  'insert into airdnd_home (home_idx, place, title, score, review_num, isSuperHost, addr, lat, lng, sub_title, filter_max_person, filter_bedroom, filter_bed, filter_bathroom, price, host_notice, loc_info) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    sql_insert =  'insert into airdnd_home (home_idx, place, title, isSuperHost, addr, lat, lng, sub_title, filter_max_person, filter_bedroom, filter_bed, filter_bathroom, price, host_notice, loc_info) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
     val = (data['room_idx'], data['place'].encode('utf8').decode('utf8'), data['main_title'].encode('utf8').decode('utf8'),
-            data['room_score'], data['room_review_num'], data['isSuperHost'], data['addr'].encode('utf8').decode('utf8'),
-            data['latlng']['lat'], data['latlng']['lng'], data['sub_title'].encode('utf8').decode('utf8'), data['room_filter_max_person'],
+            data['isSuperHost'], data['addr'].encode('utf8').decode('utf8'), data['latlng']['lat'],
+            data['latlng']['lng'], data['sub_title'].encode('utf8').decode('utf8'), data['room_filter_max_person'],
             data['room_filter_bedroom'], data['room_filter_bed'], data['room_filter_bathroom'], data['price'],
             data['room_host'].encode('utf8').decode('utf8'), data['room_loc_info_cont'].encode('utf8').decode('utf8'))
     db.execute(sql_insert, val)
@@ -44,55 +44,55 @@ def insert_room_data_in_airdnd_home_picture(room_idx, room_picture):
     conn.commit()
     print("DB저장 성공 - airdnd_picture")
 
-def insert_room_data_in_airdnd_home_notice(room_idx, room_picture):
-    sql_insert =  'insert into airdnd_home_picture (idx, home_idx, url) VALUES (0, %s, %s)'
-    val = (room_idx, room_picture.encode('utf8').decode('utf8'))
+def insert_room_data_in_airdnd_home_notice(room_idx, room_notice_sort, room_notice_content, room_notice_icon):
+    sql_insert =  'insert into airdnd_home_notice (idx, home_idx, home_notice_sort, home_notice_content, home_notice_icon) VALUES (0, %s, %s, %s, %s)'
+    val = (room_idx, room_notice_sort, room_notice_content, room_notice_icon)
     db.execute(sql_insert, val)
     conn.commit()
-    print("DB저장 성공 - airdnd_picture")
+    print("DB저장 성공 - airdnd_home_notice")
 
-def insert_room_data_in_airdnd_home_convenient_facility(data):
-    sql_insert =  'insert into airdnd_home_convenient_facility (idx, home_idx, facility) VALUES (0, %s, %s)'
-    val = (data['room_idx'], data['room_convenient_facility'].encode('utf8').decode('utf8'))
-    db.execute(sql_insert, val)
-    conn.commit()
-    print("DB저장 성공 - airdnd_convenient_facility")
-
-def insert_room_data_in_airdnd_home_review(data):
-    sql_insert =  'insert into airdnd_home_review (idx, home_idx, user_name, review_date, review_content) VALUES (0, %s, %s, %s, %s)'
-    val = (data['room_idx'], data['room_reviews']['room_reviews_name'].encode('utf8').decode('utf8'), 
-            data['room_reviews']['room_reviews_date'].encode('utf8').decode('utf8'),  data['room_reviews']['room_reviews_cont'].encode('utf8').decode('utf8'),)
-    db.execute(sql_insert, val)
-    conn.commit()
-    print("DB저장 성공 - airdnd_review")
-
-def insert_room_data_in_airdnd_home_attractions_distance(data):
-    sql_insert =  'insert into airdnd_home_attractions_distance (idx, home_idx, attractions_name, attractions_distance) VALUES (0, %s, %s, %s)'
-    val = (data['room_idx'], data['room_loc_info_distance'][0].encode('utf8').decode('utf8'), data['room_loc_info_distance'][1].encode('utf8').decode('utf8'))
-    db.execute(sql_insert, val)
-    conn.commit()
-    print("DB저장 성공 - airdnd_attractions_distance")
-
-def insert_room_data_in_airdnd_home_use_rule(data):
-    sql_insert =  'insert into airdnd_home_use_rule (idx, home_idx, use_rule) VALUES (0, %s, %s)'
-    val = (data['room_idx'], data['room_use_rule'][0].encode('utf8').decode('utf8'))
-    db.execute(sql_insert, val)
-    conn.commit()
-    print("DB저장 성공 - airdnd_use_rule")
-
-def insert_room_data_in_airdnd_home_safety_rule(data):
-    sql_insert =  'insert into airdnd_home_safety_rule (idx, home_idx, safety_rule) VALUES (0, %s, %s)'
-    val = (data['room_idx'], data['room_safety_rule'][0].encode('utf8').decode('utf8'))
-    db.execute(sql_insert, val)
-    conn.commit()
-    print("DB저장 성공 - airdnd_safety_rule")
-
-def insert_room_data_in_airdnd_home_bed(data):
-    sql_insert =  'insert into airdnd_home_bed (idx, home_idx, bed_room_name, bed_room_option) VALUES (0, %s, %s, %s)'
-    val = (data['room_idx'], data['room_bed'][0][0].encode('utf8').decode('utf8'), data['room_bed'][0][1].encode('utf8').decode('utf8'))
+def insert_room_data_in_airdnd_home_bed(room_idx, bed_room_name, bed_room_option, icon_str):
+    sql_insert =  'insert into airdnd_home_bed (idx, home_idx, bed_room_name, bed_room_option, bed_icons) VALUES (0, %s, %s, %s, %s)'
+    val = (room_idx, bed_room_name.encode('utf8').decode('utf8'), bed_room_option.encode('utf8').decode('utf8'), icon_str)
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공 - airdnd_bed")
 
-db.close()
-conn.close()
+def insert_room_data_in_airdnd_home_convenient_facility(room_idx, convenient_facilitiy, room_convenient_facility_icon):
+    sql_insert =  'insert into airdnd_home_convenient_facility (idx, home_idx, facility, facility_icon) VALUES (0, %s, %s, %s)'
+    val = (room_idx, convenient_facilitiy.encode('utf8').decode('utf8'), room_convenient_facility_icon)
+    db.execute(sql_insert, val)
+    conn.commit()
+    print("DB저장 성공 - airdnd_convenient_facility")
+
+def insert_room_data_in_airdnd_home_review(room_idx, review_dic):
+    sql_insert =  'insert into airdnd_home_review (idx, home_idx, user_name, review_date, review_content, room_cleanliness, room_accuracy, room_communication, room_position, room_checkin, room_cost_effectiveness) VALUES (0, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    val = (room_idx, review_dic['room_reviews_name'], review_dic['room_reviews_date'], review_dic['room_reviews_cont'], review_dic['room_cleanliness'], 
+                review_dic['room_communication'], review_dic['room_position'], review_dic['room_accuracy'], review_dic['room_checkin'], review_dic['room_cost_effectiveness'])
+    db.execute(sql_insert, val)
+    conn.commit()
+    print("DB저장 성공 - airdnd_review")
+
+def insert_room_data_in_airdnd_home_attractions_distance(room_idx, attractions):
+    sql_insert =  'insert into airdnd_home_attractions_distance (idx, home_idx, attractions_name, attractions_distance) VALUES (0, %s, %s, %s)'
+    val = (room_idx, attractions[0], attractions[1])
+    db.execute(sql_insert, val)
+    conn.commit()
+    print("DB저장 성공 - airdnd_attractions_distance")
+
+def insert_room_data_in_airdnd_home_use_rule(room_idx, use_rule):
+    sql_insert =  'insert into airdnd_home_use_rule (idx, home_idx, use_rule) VALUES (0, %s, %s)'
+    val = (room_idx, use_rule)
+    db.execute(sql_insert, val)
+    conn.commit()
+    print("DB저장 성공 - airdnd_use_rule")
+
+def insert_room_data_in_airdnd_home_safety_rule(room_idx, safety):
+    sql_insert =  'insert into airdnd_home_safety_rule (idx, home_idx, safety_rule) VALUES (0, %s, %s)'
+    val = (room_idx, safety)
+    db.execute(sql_insert, val)
+    conn.commit()
+    print("DB저장 성공 - airdnd_safety_rule")
+
+#db.close()
+#conn.close()

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Airdnd Scraper</title>
+        <style>
+            
+        </style>
+    </head>
+    <body>
+        <h1 style="text-align: center; margin-top: 250px; margin-bottom: 50px;">Airdnd Scraper</h1>
+        <h3 style="text-align: center; color: rgb(75, 75, 75);">You are looking for {{searchingBy}}</h3>
+        <br>
+        <h4 style="text-align: center; color: rgb(75, 75, 75);">Go to MySQL! Maybe.. being saved more reviews! 📝</h4>
+        <h4 style="text-align: center; color: rgb(75, 75, 75);">Really the end. bye bye 🙃</h4>
+        <form action="/more_reviews" method="get" style="text-align: center;">
+            <input type="hidden" required name="place" value={{searchingBy}}/>
+            <input type="hidden" required name="checkin" value={{checkin}}/>
+            <input type="hidden" required name="checkout" value={{checkout}}/>
+            <input type="hidden" required name="adults" value={{adults}}/>
+            <button>More reviews</button>
+        </form>
+
+    </body>
+</html>
