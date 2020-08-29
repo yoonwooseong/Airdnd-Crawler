@@ -8,7 +8,7 @@ from urllib.parse import quote_plus
 from airbnblatlng import Convert_to_latlng
 from airbnbsql import check_room_idx_in_DB, insert_room_data_in_MysqlDB, insert_room_data_in_airdnd_home_picture, insert_room_data_in_airdnd_home_notice
 from airbnbsql import insert_room_data_in_airdnd_home_bed, insert_room_data_in_airdnd_home_convenient_facility, insert_room_data_in_airdnd_home_review, insert_room_data_in_airdnd_home_attractions_distance
-from airbnbsql import insert_room_data_in_airdnd_home_use_rule, insert_room_data_in_airdnd_home_safety_rule
+from airbnbsql import insert_room_data_in_airdnd_home_use_rule, insert_room_data_in_airdnd_home_safety_rule, insert_room_data_in_airdnd_host
 
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
@@ -225,7 +225,10 @@ def scrape_page(URL, room_idx, price, place):
                 room_loc_info_cont = "location content is None"
                 room_loc_info_dist = room_loc_info.select('div._dc0jge')
             else:
-                room_loc_info_cont = main_container.find_all("div",{"class","_162hp8xh"})[-2].select_one('div._1y6fhhr > span').get_text()
+                try:
+                    room_loc_info_cont = main_container.find_all("div",{"class","_162hp8xh"})[-2].select_one('div._1y6fhhr > span').get_text()
+                except:
+                    room_loc_info_cont = "location content is None"
                 room_loc_info_dist = main_container.find_all("div",{"class","_dc0jge"})
             
             room_bed_sort = main_container.select('div._9342og > div._1auxwog')
@@ -246,7 +249,54 @@ def scrape_page(URL, room_idx, price, place):
 
             # 세부 별점
             room_rating_num = main_container.select('div._a3qxec > div._bgq2leu > span._4oybiu')
-           
+
+            # 여기 호스트 내용
+            host_dic = {}
+            room_host_name = main_container.select_one('div._f47qa6 > div._svr7sj > h2').get_text()
+            room_host_name = room_host_name.replace("호스트: ", "")
+            room_host_sign_in_date = main_container.select_one('div._f47qa6 > div._svr7sj > div._1fg5h8r').get_text()
+            room_host_sign_in_date = room_host_sign_in_date.replace("회원 가입일: ", "")
+            room_host_char = main_container.select('div._1byskwn')[-2].select('div._siy8gh > ul._e13lb4n > li._1tvtahm > div._5kaapu > span._pog3hg')
+            room_host_certification = False
+            room_host_superhost = False
+            host_review_num = 0
+            for ischeck in room_host_char:
+                if ischeck.string == "본인 인증 완료":
+                    room_host_certification = True
+                if ischeck.string == "슈퍼호스트":
+                    room_host_superhost = True
+                if "후기" in ischeck.string:
+                    host_review_num = ischeck.string
+                    room_host_review_num = int(host_review_num[host_review_num.find(' ')+1:host_review_num.find('개')])
+            
+            room_host_respone = main_container.select('ul._jofnfy > li._1q2lt74')
+            host_language = ""
+            host_response_rate = ""
+            host_response_time = ""
+            for host_res_list in room_host_respone:                  
+                if "언어:" in host_res_list.string:
+                    host_language = host_res_list.string
+                    host_language = host_language[host_language.find(':')+2:]
+                if "응답률:" in host_res_list.string:
+                    host_response_rate = host_res_list.string
+                    host_response_rate = host_response_rate[host_response_rate.find(':')+2:]
+                if "응답 시간:" in host_res_list.string:
+                    host_response_time = host_res_list.string
+                    host_response_time = host_response_time[host_response_time.find(':')+2:]
+            
+            try:
+                room_host_stats = main_container.select_one('div._152qbzi > span > div._1y6fhhr > span').get_text() #div._upzyfk1 > 
+            except:
+                room_host_stats = "None"
+            
+            try:
+                room_host_interaction = main_container.select_one('div._uz1jgk > div._3lsmeq > span').get_text()
+            except:
+                room_host_interaction = "None"
+
+            host_dic = {'room_host_name':room_host_name, 'room_host_sign_in_date':room_host_sign_in_date, 'room_host_certification':room_host_certification, 
+                        'room_host_superhost':room_host_superhost, 'room_host_review_num':room_host_review_num, 'host_language':host_language, 'host_response_rate':host_response_rate,
+                        'host_response_time':host_response_time, 'room_host_stats':room_host_stats, 'room_host_interaction':room_host_interaction }
             
             print()
             print("URL : ",URL)
@@ -269,6 +319,7 @@ def scrape_page(URL, room_idx, price, place):
             room_loc_info_distance = extract_loc_info_distance(room_idx, room_loc_info_dist)
             room_use_rule = extract_use_rule(room_idx, room_use_rules)
             room_safety_rule = extract_safety_rule(room_idx, room_safety)
+            insert_room_data_in_airdnd_host(room_idx, host_dic)
             
             print()
 

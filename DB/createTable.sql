@@ -66,6 +66,22 @@ create table airdnd_bed(
 	PRIMARY KEY(idx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+create table airdnd_host(
+	idx int(9) NOT NULL auto_increment,
+	home_idx int(9) NOT NULL,
+	host_name varchar(100) NOT NULL,
+	host_sign_in_date varchar(100) NOT NULL,
+	check_superhost int(3) DEFAULT 0,
+	check_certification int(3) DEFAULT 0,
+	host_review_num int(3) DEFAULT 0,
+	host_status_message VARCHAR(500),
+	Interaction_with_guests VARCHAR(500),
+	host_language VARCHAR(200),
+	response_rate VARCHAR(200),
+	response_time VARCHAR(200),
+	PRIMARY KEY(idx)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 truncate table airdnd_home;
 truncate table airdnd_home_attractions_distance;
 truncate table airdnd_home_bed;
@@ -77,15 +93,15 @@ truncate table airdnd_home_safety_rule;
 truncate table airdnd_home_use_rule;
 
 
-delete from AirdndDB.airdnd_home where home_idx = 41319274;
-delete from AirdndDB.airdnd_home_attractions_distance where home_idx = 41319274;
-delete from AirdndDB.airdnd_home_bed where home_idx = 41319274;
-delete from AirdndDB.airdnd_home_convenient_facility where home_idx = 41319274;
-delete from AirdndDB.airdnd_home_notice where home_idx = 41319274;
-delete from AirdndDB.airdnd_home_picture where home_idx = 41319274;
-delete from AirdndDB.airdnd_home_review where home_idx = 41319274;
-delete from AirdndDB.airdnd_home_safety_rule where home_idx = 41319274;
-delete from AirdndDB.airdnd_home_use_rule where home_idx = 41319274;
+delete from AirdndDB.airdnd_home where home_idx = 19892778;
+delete from AirdndDB.airdnd_home_attractions_distance where home_idx = 19892778;
+delete from AirdndDB.airdnd_home_bed where home_idx = 19892778;
+delete from AirdndDB.airdnd_home_convenient_facility where home_idx = 19892778;
+delete from AirdndDB.airdnd_home_notice where home_idx = 19892778;
+delete from AirdndDB.airdnd_home_picture where home_idx = 19892778;
+delete from AirdndDB.airdnd_home_review where home_idx = 19892778;
+delete from AirdndDB.airdnd_home_safety_rule where home_idx = 19892778;
+delete from AirdndDB.airdnd_home_use_rule where home_idx = 19892778;
 
 
 commit;

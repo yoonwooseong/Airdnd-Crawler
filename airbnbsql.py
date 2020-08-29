@@ -94,5 +94,12 @@ def insert_room_data_in_airdnd_home_safety_rule(room_idx, safety):
     conn.commit()
     print("DB저장 성공 - airdnd_safety_rule")
 
+def insert_room_data_in_airdnd_host(room_idx, host_data):
+    sql_insert =  'insert into airdnd_host (idx, home_idx, host_name, host_sign_in_date, check_superhost, check_certification, host_review_num, host_status_message, Interaction_with_guests, host_language, response_rate, response_time) VALUES (0, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+    val = (room_idx, host_data['room_host_name'], host_data['room_host_sign_in_date'], host_data['room_host_superhost'], host_data['room_host_certification'], host_data['room_host_review_num'], host_data['room_host_stats'], host_data['room_host_interaction'], host_data['host_language'], host_data['host_response_rate'], host_data['host_response_time'])
+    db.execute(sql_insert, val)
+    conn.commit()
+    print("DB저장 성공 - airdnd_host")
+    
 #db.close()
 #conn.close()

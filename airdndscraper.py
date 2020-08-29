@@ -35,6 +35,6 @@ def scrape_review():
         extract_more_review(accommodation_infos)
     else:
         return redirect("/")
-    return render_template("scrapepage.html", searchingBy=place)
+    return render_template("end.html", searchingBy=place)
 
 app.run(host="localhost")
