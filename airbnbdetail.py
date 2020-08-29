@@ -213,7 +213,6 @@ def scrape_page(URL, room_idx, price, place):
             room_notice_title = main_container.select('div._1044tk8 > div._1mqc21n > div._1qsawv5')
             room_notice_cont = main_container.select('div._1044tk8 > div._1mqc21n > div._1jlr81g')
             room_notice_icon = main_container.select('div._1044tk8 > div._fz3zdn > svg > path')
-            #print(room_notice_icon[0].attrs['d'])
             try:
                 room_host = main_container.select_one('div._1y6fhhr').find("span").get_text()
             except:
@@ -234,10 +233,7 @@ def scrape_page(URL, room_idx, price, place):
             room_bed_sort = main_container.select('div._9342og > div._1auxwog')
             room_bed_sort_cont = main_container.select('div._9342og > div._1a5glfg')
             room_bed_sort_icon = main_container.select('div._9342og > div._p03egf')
-            #print(room_bed_sort_icon[0].select_one('svg > path').attrs['d'])
-
             room_convenient_facilities = main_container.select('div._19xnuo97 > div._1nlbjeu')
-            
             room_reviews = main_container.select('div._50mnu4')
             room_rules_prev = main_container.select('div._m9x7bnz > div._f42bxt')
             try:
@@ -283,7 +279,6 @@ def scrape_page(URL, room_idx, price, place):
                 if "응답 시간:" in host_res_list.string:
                     host_response_time = host_res_list.string
                     host_response_time = host_response_time[host_response_time.find(':')+2:]
-            
             try:
                 room_host_stats = main_container.select_one('div._152qbzi > span > div._1y6fhhr > span').get_text() #div._upzyfk1 > 
             except:
@@ -293,7 +288,6 @@ def scrape_page(URL, room_idx, price, place):
                 room_host_interaction = main_container.select_one('div._uz1jgk > div._3lsmeq > span').get_text()
             except:
                 room_host_interaction = "None"
-
             host_dic = {'room_host_name':room_host_name, 'room_host_sign_in_date':room_host_sign_in_date, 'room_host_certification':room_host_certification, 
                         'room_host_superhost':room_host_superhost, 'room_host_review_num':room_host_review_num, 'host_language':host_language, 'host_response_rate':host_response_rate,
                         'host_response_time':host_response_time, 'room_host_stats':room_host_stats, 'room_host_interaction':room_host_interaction }
@@ -320,7 +314,6 @@ def scrape_page(URL, room_idx, price, place):
             room_use_rule = extract_use_rule(room_idx, room_use_rules)
             room_safety_rule = extract_safety_rule(room_idx, room_safety)
             insert_room_data_in_airdnd_host(room_idx, host_dic)
-            
             print()
 
             data = {'URL':URL,'main_title':main_title, 'isSuperHost':isSuperHost, 'addr':addr, 'latlng':latlng, 'room_idx':room_idx, 'price':int_price,
@@ -336,7 +329,6 @@ def scrape_page(URL, room_idx, price, place):
         else:
             print("try again..")
             driver.quit()
-
 
 def extract_detail(accommodation_infos):
     room_nums_in_DB = check_room_idx_in_DB()

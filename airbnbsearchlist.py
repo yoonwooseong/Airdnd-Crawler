@@ -1,11 +1,7 @@
 import requests
-#import time
-#from selenium import webdriver
 from bs4 import BeautifulSoup
 
-#URL = "https://www.airbnb.co.kr/s/%EA%B4%8C/homes?checkin=2020-10-01&checkout=2020-10-03&adults=1&children=0&infants=0"
 URL_BASE = "https://www.airbnb.co.kr/s/"
-#adults=1&children=0&infants=0
 
 def get_last_page():
     set_last_page = 1
@@ -23,16 +19,8 @@ def extract_room_idx(last_page, Query):
 
         URL = URL_BASE + URL_PLACE + URL_CHECKIN + URL_CHECKOUT + URL_ADULTS + "&children=0&infants=0"
         print(URL)
-
-        #driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver')
-        #driver.implicitly_wait(3)
-        #driver.get(URL)
-        #time.sleep(2)
         result = requests.get(f"{URL}&items_offset={page*20}")
         soup = BeautifulSoup(result.text, "html.parser")
-        #html = driver.page_source
-        #time.sleep(2)
-        #soup = BeautifulSoup(html, "html.parser")
         results = soup.find_all("div", {"class":"_1048zci"})
         
         for result in results:

@@ -14,7 +14,6 @@ os.environ["NLS_LANG"] = ".AL32UTF8"
 conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
-#URL_PARAM = "?adults=1&location=%EA%B4%8C&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
 take_out_start_index = 0
 db = conn.cursor()
 
@@ -100,6 +99,3 @@ def insert_room_data_in_airdnd_host(room_idx, host_data):
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공 - airdnd_host")
-    
-#db.close()
-#conn.close()

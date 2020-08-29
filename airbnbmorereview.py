@@ -12,9 +12,7 @@ os.environ["NLS_LANG"] = ".AL32UTF8"
 conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
-
 db = conn.cursor()
-
 def insert_room_data_in_airdnd_home_review(room_idx, review_dic):
     
     sql_insert =  'insert into airdnd_home_review (idx, home_idx, user_name, review_date, review_content, room_cleanliness, room_accuracy, room_communication, room_position, room_checkin, room_cost_effectiveness) VALUES (0, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
@@ -32,7 +30,6 @@ def extract_review(room_idx, extracted_list, room_rating):
         room_reviews_name = room_reviews_name_date[:room_reviews_name_date.find("년 ")-4]
         room_reviews_date = e_list.select_one('div._1oy2hpi > div._1lc9bb6 > div').string
         room_reviews_cont = e_list.select_one('div._1y6fhhr > span').get_text()
-
         room_cleanliness = room_rating[0]
         room_accuracy = room_rating[1]
         room_communication = room_rating[2]
@@ -43,6 +40,7 @@ def extract_review(room_idx, extracted_list, room_rating):
         review_dic = {'room_reviews_name':room_reviews_name, 'room_reviews_date':room_reviews_date ,'room_reviews_cont':room_reviews_cont, 
                     'room_cleanliness':room_cleanliness, 'room_accuracy':room_accuracy, 'room_communication':room_communication, 'room_position':room_position,
                     'room_checkin':room_checkin, 'room_cost_effectiveness':room_cost_effectiveness}
+
         insert_room_data_in_airdnd_home_review(room_idx, review_dic)
         data_list.append(review_dic)
     print("reviews : ", data_list)  
@@ -72,7 +70,6 @@ def scrape_reviews(URL, room_idx, place):
         html = driver.page_source
         time.sleep(3)
         soup = BeautifulSoup(html, "html.parser")
-        
         results = soup.select_one('body.with-new-header')
         main_container = results.select_one('div._yzu7qn')
         load_test = main_container.select_one('div._m5uolq')
@@ -90,7 +87,6 @@ def scrape_reviews(URL, room_idx, place):
             print()
 
             data = {'room_idx':room_idx, 'room_reviews':room_review }
-
             driver.quit()
             return data
             
