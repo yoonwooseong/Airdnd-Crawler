@@ -82,6 +82,7 @@ create table airdnd_host(
 	PRIMARY KEY(idx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+set foreign_key_checks = 0;
 truncate table airdnd_home;
 truncate table airdnd_home_attractions_distance;
 truncate table airdnd_home_bed;
@@ -91,17 +92,20 @@ truncate table airdnd_home_picture;
 truncate table airdnd_home_review;
 truncate table airdnd_home_safety_rule;
 truncate table airdnd_home_use_rule;
+truncate table airdnd_host;
+set foreign_key_checks = 1;
 
 
-delete from AirdndDB.airdnd_home where home_idx = 19892778;
-delete from AirdndDB.airdnd_home_attractions_distance where home_idx = 19892778;
-delete from AirdndDB.airdnd_home_bed where home_idx = 19892778;
-delete from AirdndDB.airdnd_home_convenient_facility where home_idx = 19892778;
-delete from AirdndDB.airdnd_home_notice where home_idx = 19892778;
-delete from AirdndDB.airdnd_home_picture where home_idx = 19892778;
-delete from AirdndDB.airdnd_home_review where home_idx = 19892778;
-delete from AirdndDB.airdnd_home_safety_rule where home_idx = 19892778;
-delete from AirdndDB.airdnd_home_use_rule where home_idx = 19892778;
+delete from AirdndDB.airdnd_home where home_idx = 44725172;
+delete from AirdndDB.airdnd_home_attractions_distance where home_idx = 44725172;
+delete from AirdndDB.airdnd_home_bed where home_idx = 44725172;
+delete from AirdndDB.airdnd_home_convenient_facility where home_idx = 44725172;
+delete from AirdndDB.airdnd_home_notice where home_idx = 44725172;
+delete from AirdndDB.airdnd_home_picture where home_idx = 44725172;
+delete from AirdndDB.airdnd_home_review where home_idx = 44725172;
+delete from AirdndDB.airdnd_home_safety_rule where home_idx = 44725172;
+delete from AirdndDB.airdnd_home_use_rule where home_idx = 44725172;
+delete from AirdndDB.airdnd_host where home_idx = 44725172;
 
 
 commit;

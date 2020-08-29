@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 URL_BASE = "https://www.airbnb.co.kr/s/"
 
 def get_last_page():
-    set_last_page = 1
+    set_last_page = 6
     return int(set_last_page)
 
 def extract_room_idx(last_page, Query):
@@ -31,7 +31,7 @@ def extract_room_idx(last_page, Query):
             room_infos.append(room_info)
     
         query_infos['Query'] = Query
-        query_infos['room_infos'] = room_infos        
+        query_infos['room_infos'] = room_infos
     return query_infos
 
 def get_accommodation_infos(Query):

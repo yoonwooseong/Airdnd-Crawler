@@ -39,9 +39,14 @@ def extract_pictures(room_idx, room_pictures):
 def extract_home_notice(room_idx, notice_sort, content, notice_icon):
     data_out_list = []
     take_out_start_index = 0
+    print("길이오류 : ",len(notice_sort),len(content),len(notice_icon))
     for f_list in notice_sort:
-        data_in_list = [f_list.string, content[take_out_start_index].get_text().replace("자세히 알아보기",""), notice_icon[take_out_start_index].attrs['d']]
-        insert_room_data_in_airdnd_home_notice(room_idx, f_list.string, content[take_out_start_index].get_text().replace("자세히 알아보기",""), notice_icon[take_out_start_index].attrs['d'])
+        try:
+            bring_notice_icon = notice_icon[take_out_start_index].select_one('path').attrs['d']
+        except:
+            bring_notice_icon = notice_icon[take_out_start_index].select_one('g > path').attrs['d']
+        data_in_list = [f_list.string, content[take_out_start_index].get_text().replace("자세히 알아보기",""), bring_notice_icon]
+        insert_room_data_in_airdnd_home_notice(room_idx, f_list.string, content[take_out_start_index].get_text().replace("자세히 알아보기",""), bring_notice_icon)
         data_out_list.append(data_in_list)
         take_out_start_index += 1
     take_out_start_index = 0
@@ -203,16 +208,23 @@ def scrape_page(URL, room_idx, price, place):
                 room_filter_bedroom = int(room_bedroom_n[room_bedroom_n.find('침실 ')+3:room_bedroom_n.find('개')])
             except:
                 room_filter_bedroom = 0; #원룸
+            try:
+                room_bed_n = room_filter[2]
+                room_filter_bed = int(room_bed_n[room_bed_n.find('침대 ')+3:room_bed_n.find('개')])
+                room_bathroom = room_filter[3]
+            except:
+                room_filter_bed = 1
+                room_bathroom = "욕실 1개"
             
-            room_bed_n = room_filter[2]
-            room_filter_bed = int(room_bed_n[room_bed_n.find('침대 ')+3:room_bed_n.find('개')])
-            room_bathroom = room_filter[3]
-            room_filter_bathroom = float(room_bathroom[room_bathroom.find('욕실 ')+3:room_bathroom.find('개')])
+            try:
+                room_filter_bathroom = float(room_bathroom[room_bathroom.find('욕실 ')+3:room_bathroom.find('개')])
+            except:
+                room_filter_bathroom = 1
 
             room_pictures = main_container.find_all("div", {"class", "_1h6n1zu"})
             room_notice_title = main_container.select('div._1044tk8 > div._1mqc21n > div._1qsawv5')
             room_notice_cont = main_container.select('div._1044tk8 > div._1mqc21n > div._1jlr81g')
-            room_notice_icon = main_container.select('div._1044tk8 > div._fz3zdn > svg > path')
+            room_notice_icon = main_container.select('div._1044tk8 > div._fz3zdn > svg')
             try:
                 room_host = main_container.select_one('div._1y6fhhr').find("span").get_text()
             except:
@@ -255,7 +267,7 @@ def scrape_page(URL, room_idx, price, place):
             room_host_char = main_container.select('div._1byskwn')[-2].select('div._siy8gh > ul._e13lb4n > li._1tvtahm > div._5kaapu > span._pog3hg')
             room_host_certification = False
             room_host_superhost = False
-            host_review_num = 0
+            room_host_review_num = 0
             for ischeck in room_host_char:
                 if ischeck.string == "본인 인증 완료":
                     room_host_certification = True

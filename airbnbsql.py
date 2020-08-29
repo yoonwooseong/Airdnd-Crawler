@@ -35,6 +35,7 @@ def insert_room_data_in_MysqlDB(data):
     db.execute(sql_insert, val)
     conn.commit()
     print("DB저장 성공 - airdnd_home")
+    print("----------------------------------------------------------")
 
 def insert_room_data_in_airdnd_home_picture(room_idx, room_picture):
     sql_insert =  'insert into airdnd_home_picture (idx, home_idx, url) VALUES (0, %s, %s)'
