@@ -16,9 +16,14 @@ airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 
 <img src="https://user-images.githubusercontent.com/57824259/91246723-9422cb00-e78b-11ea-950f-b9b96a4afdf9.png" alt="home search" width="600"/>
 
 아래와 같이 스크래핑을 print하고 DB에 저장한다.  
-
-스크래핑이 완료되면 해당 화면(scrapepage.html)으로 이동한다.
-
+<img src="https://user-images.githubusercontent.com/57824259/91679946-a2eef080-eb84-11ea-9d07-95da581a785c.PNG" alt="home DB" width="600"/>
+  
+스크래핑이 완료되면 해당 화면(scrapepage.html)으로 이동한다.  
+<img src="https://user-images.githubusercontent.com/57824259/91679942-a1252d00-eb84-11ea-8ad9-227d5ee55cd6.PNG" alt="scrapepage" width="600"/>
+  
+해당 숙소의 리뷰도 스크래핑을 원하면 more review 버튼을 클릭한다.  
+<img src="https://user-images.githubusercontent.com/57824259/91680172-6079e380-eb85-11ea-81d8-71c8434016d5.PNG" alt="end" width="600"/>  
+  
 ## 개발 환경 설정
 
 ```sh
@@ -29,9 +34,11 @@ pip install bs4
 ```
 
 ## 업데이트 내역
-
+* 0.1.1
+    * more review 추가
+    * issue 해결 (이모트 가능)
 * 0.1.0
-    * 첫 출시
+    * 완료
     * issue : host 당부의 말에 이모트를 넣을 시 오류. ( -utf8mb4-로 전환 필요 )
 * 0.0.1
     * 작업 진행 중
