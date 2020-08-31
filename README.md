@@ -47,7 +47,7 @@ pip install bs4
 
 윤우성 –  dntjd851@naver.com
 
-해당 레퍼지토리는 오직 공부목적이며 공부 목적 이외의 용도로 사용불가
+해당 레퍼지토리는 오직 공부목적이며 공부 목적 이외의 용도로 사용불가  
 MIT 라이센스를 준수하며 ``LICENSE``에서 자세한 정보를 확인할 수 있습니다.
 
 [https://github.com/yoonwooseong/github-link](https://github.com/yoonwooseong/)
