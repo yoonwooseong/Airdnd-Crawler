@@ -1,4 +1,4 @@
-# web-scraper (only study)
+# Airdnd_scraper (only study)
 > -Airdnd-(DEVengersAssemble Airbnb clone cording)에 필요한 데이터들을 가져오기 위해 web-scraper개발
 
 해당 web-scraper는 airbnb 숙소정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위한 Selenium과 BeautifulSoup4를 사용해 스크래핑을 하였고 프레임워크는 Flask framework를 사용하였다. 스크랩후에 pymysql로 MySQL에 저장한다.
