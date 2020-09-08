@@ -103,3 +103,4 @@ dist
 # TernJS port file
 .tern-port
 DB/createTable.sql
+DB/createTable.sql
