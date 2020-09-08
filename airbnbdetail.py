@@ -72,14 +72,14 @@ def extract_convenient_facility(room_idx, convenient_facilities):
     data_list = []
 
     for e_list in convenient_facilities:
-        convenient_facilitiy = e_list.find("div",{"class","_1nlbjeu"}).find("div").get_text()
         try:
+            convenient_facilitiy = e_list.find("div",{"class","_1nlbjeu"}).find("div").get_text()
             room_convenient_facility_icon = e_list.select_one('div._yp1t7a > svg > path').attrs['d']    
         except:
-            room_convenient_facility_icon = "None"
+            convenient_facilitiy = e_list.find("div",{"class","_1nlbjeu"}).find("div").find("span",{"class","_krjbj"}).get_text()
+            room_convenient_facility_icon = e_list.select_one('div._13tgo6a4 > svg > path').attrs['d']
         insert_room_data_in_airdnd_home_convenient_facility(room_idx, convenient_facilitiy, room_convenient_facility_icon)         
         data_list.append([convenient_facilitiy, room_convenient_facility_icon])
-    print("몇번돌아야해",  len(convenient_facilities))
     return data_list
 
 def extract_review(room_idx, extracted_list, room_rating):
