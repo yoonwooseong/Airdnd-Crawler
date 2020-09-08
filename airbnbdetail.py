@@ -227,7 +227,7 @@ def scrape_page(URL, room_idx, price, place):
             room_notice_cont = main_container.select('div._1044tk8 > div._1mqc21n > div._1jlr81g')
             room_notice_icon = main_container.select('div._1044tk8 > div._fz3zdn > svg')
             try:
-                room_host = main_container.select_one('div._1y6fhhr').find("span").get_text()
+                room_host = main_container.select_one('div._1y6fhhr').find("span")
             except:
                 room_host = ""
 
@@ -238,7 +238,7 @@ def scrape_page(URL, room_idx, price, place):
                 room_loc_info_dist = room_loc_info.select('div._dc0jge')
             else:
                 try:
-                    room_loc_info_cont = main_container.find_all("div",{"class","_162hp8xh"})[-2].select_one('div._1y6fhhr > span').get_text()
+                    room_loc_info_cont = main_container.find_all("div",{"class","_162hp8xh"})[-2].select_one('div._1y6fhhr > span')
                 except:
                     room_loc_info_cont = "location content is None"
                 room_loc_info_dist = main_container.find_all("div",{"class","_dc0jge"})
