@@ -72,14 +72,14 @@ def extract_convenient_facility(room_idx, convenient_facilities):
     data_list = []
 
     for e_list in convenient_facilities:
-        convenient_facilitiy = e_list.find("div").get_text()
+        convenient_facilitiy = e_list.find("div",{"class","_1nlbjeu"}).find("div").get_text()
         try:
             room_convenient_facility_icon = e_list.select_one('div._yp1t7a > svg > path').attrs['d']    
         except:
             room_convenient_facility_icon = "None"
         insert_room_data_in_airdnd_home_convenient_facility(room_idx, convenient_facilitiy, room_convenient_facility_icon)         
         data_list.append([convenient_facilitiy, room_convenient_facility_icon])
-    print("data_list : ", data_list)
+    print("몇번돌아야해",  len(convenient_facilities))
     return data_list
 
 def extract_review(room_idx, extracted_list, room_rating):
@@ -147,6 +147,7 @@ def extract_rating(room_idx, room_rating_num):
 def scrape_page(URL, room_idx, price, place):
     while True:
         driver = webdriver.Chrome('C:/Wooseong/web scraper/chromedriver')
+        driver.set_window_size(1400,1000)
         driver.implicitly_wait(3)
         driver.get(URL)
         time.sleep(3)
@@ -245,7 +246,9 @@ def scrape_page(URL, room_idx, price, place):
             room_bed_sort = main_container.select('div._9342og > div._1auxwog')
             room_bed_sort_cont = main_container.select('div._9342og > div._1a5glfg')
             room_bed_sort_icon = main_container.select('div._9342og > div._p03egf')
-            room_convenient_facilities = main_container.select('div._19xnuo97 > div._1nlbjeu')
+            #room_convenient_facilities = main_container.select('div._19xnuo97 > div._1nlbjeu')
+            room_convenient_facilities = main_container.find_all("div",{"class","_19xnuo97"})
+            print("리스트 길이는 : ", len(room_convenient_facilities))
             room_reviews = main_container.select('div._50mnu4')
             room_rules_prev = main_container.select('div._m9x7bnz > div._f42bxt')
             try:
@@ -303,7 +306,7 @@ def scrape_page(URL, room_idx, price, place):
             host_dic = {'room_host_name':room_host_name, 'room_host_sign_in_date':room_host_sign_in_date, 'room_host_certification':room_host_certification, 
                         'room_host_superhost':room_host_superhost, 'room_host_review_num':room_host_review_num, 'host_language':host_language, 'host_response_rate':host_response_rate,
                         'host_response_time':host_response_time, 'room_host_stats':room_host_stats, 'room_host_interaction':room_host_interaction }
-            
+            test = soup.find_all("li",{"class","_wmuyow"})
             print()
             print("URL : ",URL)
             print('main_title : ',main_title)

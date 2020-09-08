@@ -96,16 +96,16 @@ truncate table airdnd_host;
 set foreign_key_checks = 1;
 
 
-delete from AirdndDB.airdnd_home where home_idx = 25548879;
-delete from AirdndDB.airdnd_home_attractions_distance where home_idx = 25548879;
-delete from AirdndDB.airdnd_home_bed where home_idx = 25548879;
-delete from AirdndDB.airdnd_home_convenient_facility where home_idx = 25548879;
-delete from AirdndDB.airdnd_home_notice where home_idx = 25548879;
-delete from AirdndDB.airdnd_home_picture where home_idx = 25548879;
-delete from AirdndDB.airdnd_home_review where home_idx = 25548879;
-delete from AirdndDB.airdnd_home_safety_rule where home_idx = 25548879;
-delete from AirdndDB.airdnd_home_use_rule where home_idx = 25548879;
-delete from AirdndDB.airdnd_host where home_idx = 25548879;
+delete from AirdndDB.airdnd_home where home_idx = 39841987;
+delete from AirdndDB.airdnd_home_attractions_distance where home_idx = 39841987;
+delete from AirdndDB.airdnd_home_bed where home_idx = 39841987;
+delete from AirdndDB.airdnd_home_convenient_facility where home_idx = 39841987;
+delete from AirdndDB.airdnd_home_notice where home_idx = 39841987;
+delete from AirdndDB.airdnd_home_picture where home_idx = 39841987;
+delete from AirdndDB.airdnd_home_review where home_idx = 39841987;
+delete from AirdndDB.airdnd_home_safety_rule where home_idx = 39841987;
+delete from AirdndDB.airdnd_home_use_rule where home_idx = 39841987;
+delete from AirdndDB.airdnd_host where home_idx = 39841987;
 
 
 commit;
