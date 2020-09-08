@@ -28,7 +28,7 @@ def extract_room_idx(last_page, Query):
             room_price = result.find("span", {"class":"_1p7iugi"}).get_text()
             room_idx = result_url[result_url.index('s/')+2:result_url.index('?')]
             room_info = {"room_idx":room_idx, "room_price":room_price}
-            if room_idx not in room_infos:
+            if room_info not in room_infos:
                 room_infos.append(room_info)
     
         query_infos['Query'] = Query
