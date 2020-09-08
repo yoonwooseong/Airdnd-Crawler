@@ -96,16 +96,27 @@ truncate table airdnd_host;
 set foreign_key_checks = 1;
 
 
-delete from AirdndDB.airdnd_home where home_idx = 39841987;
-delete from AirdndDB.airdnd_home_attractions_distance where home_idx = 39841987;
-delete from AirdndDB.airdnd_home_bed where home_idx = 39841987;
-delete from AirdndDB.airdnd_home_convenient_facility where home_idx = 39841987;
-delete from AirdndDB.airdnd_home_notice where home_idx = 39841987;
-delete from AirdndDB.airdnd_home_picture where home_idx = 39841987;
-delete from AirdndDB.airdnd_home_review where home_idx = 39841987;
-delete from AirdndDB.airdnd_home_safety_rule where home_idx = 39841987;
-delete from AirdndDB.airdnd_home_use_rule where home_idx = 39841987;
-delete from AirdndDB.airdnd_host where home_idx = 39841987;
+delete from AirdndDB.airdnd_home2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_home_attractions_distance2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_home_bed2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_home_convenient_facility2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_home_notice2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_home_picture2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_home_review2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_home_safety_rule2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_home_use_rule2 where home_idx = 43495407;
+delete from AirdndDB.airdnd_host where home_idx2 = 43495407;
+
+Create Table airdnd_home2 like airdnd_home;
+Create Table airdnd_home_attractions_distance2 like airdnd_home_attractions_distance;
+Create Table airdnd_home_bed2 like airdnd_home_bed;
+Create Table airdnd_home_convenient_facility2 like airdnd_home_convenient_facility;
+Create Table airdnd_home_notice2 like airdnd_home_notice;
+Create Table airdnd_home_picture2 like airdnd_home_picture;
+Create Table airdnd_home_review2 like airdnd_home_review;
+Create Table airdnd_home_safety_rule2 like airdnd_home_safety_rule;
+Create Table airdnd_home_use_rule2 like airdnd_home_use_rule;
+Create Table airdnd_host2 like airdnd_host;
 
 
 commit;

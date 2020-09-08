@@ -306,7 +306,7 @@ def scrape_page(URL, room_idx, price, place):
             host_dic = {'room_host_name':room_host_name, 'room_host_sign_in_date':room_host_sign_in_date, 'room_host_certification':room_host_certification, 
                         'room_host_superhost':room_host_superhost, 'room_host_review_num':room_host_review_num, 'host_language':host_language, 'host_response_rate':host_response_rate,
                         'host_response_time':host_response_time, 'room_host_stats':room_host_stats, 'room_host_interaction':room_host_interaction }
-            test = soup.find_all("li",{"class","_wmuyow"})
+
             print()
             print("URL : ",URL)
             print('main_title : ',main_title)

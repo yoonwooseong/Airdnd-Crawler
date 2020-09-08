@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 URL_BASE = "https://www.airbnb.co.kr/s/"
 
 def get_last_page():
-    set_last_page = 2
+    set_last_page = 6
     return int(set_last_page)
 
 def extract_room_idx(last_page, Query):
