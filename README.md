@@ -8,7 +8,7 @@
 <img src="https://user-images.githubusercontent.com/57824259/91785026-51576c00-ec3f-11ea-84ae-39b8fc6af65e.png" alt="MySQL" width="50" height="50"/>
  **Selenium**, **Beautifulsoup4**  
 
-## 사용 예제
+## 코드 리뷰
 코드리뷰(Code Review)는 언제나 환영입니다. 😊
 
 
