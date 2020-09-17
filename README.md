@@ -3,7 +3,7 @@
 
 해당 web-scraper는 airbnb 숙소정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위한 Selenium과 BeautifulSoup4를 사용해 스크래핑을 하였고 프레임워크는 Flask framework를 사용하였다. 스크랩후에 pymysql로 MySQL에 저장한다.
 
-## Use
+## Used stack
 <img src="https://user-images.githubusercontent.com/57824259/91246509-f4fdd380-e78a-11ea-86f6-1f2ed5aa9e74.png" alt="Flask" width="50" height="50"/> <img src="https://user-images.githubusercontent.com/57824259/91246511-f6c79700-e78a-11ea-8c45-d9561831cf8c.png" alt="Python" width="50" height="50"/>
 <img src="https://user-images.githubusercontent.com/57824259/91785026-51576c00-ec3f-11ea-84ae-39b8fc6af65e.png" alt="MySQL" width="50" height="50"/>
  **Selenium**, **Beautifulsoup4**  
@@ -37,6 +37,9 @@ pip install selenium
 pip install flask --framework
 pip install bs4
 ```
+
+## 제한사항
+해당 사이트의 class명이나 구조가 바뀌면 수정이 필요
 
 ## 업데이트 내역
 * 0.1.1
