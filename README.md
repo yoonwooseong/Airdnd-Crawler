@@ -15,19 +15,19 @@
 ## 사용 예제
 
 airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 접속한다. 실행시 첫 화면(home.html)이다.
-<img src="https://user-images.githubusercontent.com/57824259/91246721-92f19e00-e78b-11ea-8444-e29a5b89c477.png" alt="home" width="400"/>  
+<img src="https://user-images.githubusercontent.com/57824259/91246721-92f19e00-e78b-11ea-8444-e29a5b89c477.png" alt="home" width="500"/>  
 해당 검색창에 각 조건을 입력해 Search 버튼을 클릭한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91246723-9422cb00-e78b-11ea-950f-b9b96a4afdf9.png" alt="home search" width="400"/>
+<img src="https://user-images.githubusercontent.com/57824259/91246723-9422cb00-e78b-11ea-950f-b9b96a4afdf9.png" alt="home search" width="500"/>
 
 아래와 같이 스크래핑을 print하고 DB에 저장한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91679946-a2eef080-eb84-11ea-9d07-95da581a785c.PNG" alt="home DB" width="400"/>
+<img src="https://user-images.githubusercontent.com/57824259/91679946-a2eef080-eb84-11ea-9d07-95da581a785c.PNG" alt="home DB" width="500"/>
 <img src="https://user-images.githubusercontent.com/57824259/93201112-b2c52200-f78b-11ea-9cbf-f5a5a1d4ff7e.PNG" alt="DB tables" width="200"/>
   
 스크래핑이 완료되면 해당 화면(scrapepage.html)으로 이동한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91679942-a1252d00-eb84-11ea-8ad9-227d5ee55cd6.PNG" alt="scrapepage" width="400"/>
+<img src="https://user-images.githubusercontent.com/57824259/91679942-a1252d00-eb84-11ea-8ad9-227d5ee55cd6.PNG" alt="scrapepage" width="500"/>
   
 해당 숙소의 리뷰도 스크래핑을 원하면 more review 버튼을 클릭한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91680172-6079e380-eb85-11ea-81d8-71c8434016d5.PNG" alt="end" width="400"/>  
+<img src="https://user-images.githubusercontent.com/57824259/91680172-6079e380-eb85-11ea-81d8-71c8434016d5.PNG" alt="end" width="500"/>  
   
 ## 개발 환경 설정
 
