@@ -29,6 +29,11 @@ airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 
 해당 숙소의 리뷰도 스크래핑을 원하면 more review 버튼을 클릭한다.  
 <img src="https://user-images.githubusercontent.com/57824259/91680172-6079e380-eb85-11ea-81d8-71c8434016d5.PNG" alt="end" width="500"/>  
   
+## 동작 원리
+
+<img src="https://user-images.githubusercontent.com/57824259/94338748-a1073880-002f-11eb-9576-0cf608661849.png" alt="scrape" width="300"/>  
+
+
 ## 개발 환경 설정
 
 ```sh
