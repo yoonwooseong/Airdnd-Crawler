@@ -31,7 +31,7 @@ airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 
   
 ## 동작 원리
 
-<img src="https://user-images.githubusercontent.com/57824259/94338748-a1073880-002f-11eb-9576-0cf608661849.png" alt="scrape" width="300"/>  
+<img src="https://user-images.githubusercontent.com/57824259/94338748-a1073880-002f-11eb-9576-0cf608661849.png" alt="scrape" width="400"/>  
 
 
 ## 개발 환경 설정
