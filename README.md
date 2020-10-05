@@ -6,7 +6,7 @@
 ## Used stack
 <img src="https://user-images.githubusercontent.com/57824259/91246509-f4fdd380-e78a-11ea-86f6-1f2ed5aa9e74.png" alt="Flask" width="50" height="50"/> <img src="https://user-images.githubusercontent.com/57824259/91246511-f6c79700-e78a-11ea-8c45-d9561831cf8c.png" alt="Python" width="50" height="50"/>
 <img src="https://user-images.githubusercontent.com/57824259/91785026-51576c00-ec3f-11ea-84ae-39b8fc6af65e.png" alt="MySQL" width="50" height="50"/>
- **Selenium**, **Beautifulsoup4**  
+ **Selenium**, **Beautifulsoup4b**  
 
 ## 코드 리뷰
 코드리뷰(Code Review)는 언제나 환영입니다. 😊
@@ -22,7 +22,7 @@ airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 
 아래와 같이 스크래핑을 print하고 DB에 저장한다.  
 <img src="https://user-images.githubusercontent.com/57824259/91679946-a2eef080-eb84-11ea-9d07-95da581a785c.PNG" alt="home DB" width="500"/>
 <img src="https://user-images.githubusercontent.com/57824259/93201112-b2c52200-f78b-11ea-9cbf-f5a5a1d4ff7e.PNG" alt="DB tables" width="200"/>
-  
+  Ddd
 스크래핑이 완료되면 해당 화면(scrapepage.html)으로 이동한다.  
 <img src="https://user-images.githubusercontent.com/57824259/91679942-a1252d00-eb84-11ea-8ad9-227d5ee55cd6.PNG" alt="scrapepage" width="500"/>
   
