@@ -14,7 +14,7 @@ from airbnbsql import insert_room_data_in_airdnd_home_use_rule, insert_room_data
 os.environ["NLS_LANG"] = ".AL32UTF8"
 
 # DB와 연결된 코드
-conn = pymysql.connect(host = '52.79.141.237', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
+conn = pymysql.connect(host = '52.78.17.113', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
 URL_PARAM = "?adults=1&location=%EA%B4%8C&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"
@@ -354,7 +354,7 @@ def extract_detail(accommodation_infos):
     adults = Query['adults']
 
     for room_info in accommodation_infos['room_infos']:
-        room_idx = room_info["room_idx"]
+        room_idx = room_info["room_idx"].replace("plus/","")
 
         #방번호를 검색해 DB에 있는지 체크
         if tuple([int(room_idx)]) not in room_nums_in_DB:
