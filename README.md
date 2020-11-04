@@ -20,8 +20,9 @@ airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 
 <img src="https://user-images.githubusercontent.com/57824259/91246723-9422cb00-e78b-11ea-950f-b9b96a4afdf9.png" alt="home search" width="500"/>
 
 아래와 같이 스크래핑을 print하고 DB에 저장한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91679946-a2eef080-eb84-11ea-9d07-95da581a785c.PNG" alt="home DB" width="500"/>
 <img src="https://user-images.githubusercontent.com/57824259/93201112-b2c52200-f78b-11ea-9cbf-f5a5a1d4ff7e.PNG" alt="DB tables" width="200"/>
+<img src="https://user-images.githubusercontent.com/57824259/91679946-a2eef080-eb84-11ea-9d07-95da581a785c.PNG" alt="home DB" width="500"/>
+
    
 스크래핑이 완료되면 해당 화면(scrapepage.html)으로 이동한다.  
 <img src="https://user-images.githubusercontent.com/57824259/91679942-a1252d00-eb84-11ea-8ad9-227d5ee55cd6.PNG" alt="scrapepage" width="500"/>
