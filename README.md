@@ -31,7 +31,7 @@ airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 
 <img src="https://user-images.githubusercontent.com/57824259/91680172-6079e380-eb85-11ea-81d8-71c8434016d5.PNG" alt="end" width="500"/>  
   
 ## 동작 원리
-
+>아래의 동작을 통해 얻은 데이터들을 가지고 Airbnb Clone Coding 프로젝트에 사용 [프로젝트 바로가기](https://github.com/DEVengersAssemble)  
 <img src="https://user-images.githubusercontent.com/57824259/94338748-a1073880-002f-11eb-9576-0cf608661849.png" alt="scrape" width="400"/>  
 
 
@@ -45,7 +45,8 @@ pip install bs4
 ```
 
 ## 제한사항
-해당 사이트의 class명이나 구조가 바뀌면 수정이 필요
+
+해당 사이트의 class name이나 구조가 바뀌면 코드수정 필요
 
 ## 업데이트 내역
 * 0.1.1
