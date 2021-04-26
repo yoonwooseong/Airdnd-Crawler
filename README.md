@@ -3,12 +3,16 @@
 
 해당 web-scraper는 airbnb 숙소정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위한 Selenium과 BeautifulSoup4를 사용해 스크래핑을 하였고 프레임워크는 Flask framework를 사용하였다. 스크랩후에 pymysql로 MySQL에 저장한다.
 
-## Used stack
+***
+
+## Used stack  
 <img src="https://user-images.githubusercontent.com/57824259/91246509-f4fdd380-e78a-11ea-86f6-1f2ed5aa9e74.png" alt="Flask" width="50" height="50"/> <img src="https://user-images.githubusercontent.com/57824259/91246511-f6c79700-e78a-11ea-8c45-d9561831cf8c.png" alt="Python" width="50" height="50"/>
 <img src="https://user-images.githubusercontent.com/57824259/91785026-51576c00-ec3f-11ea-84ae-39b8fc6af65e.png" alt="MySQL" width="50" height="50"/>
  **Selenium**, **Beautifulsoup4b**  
 
-## 코드 리뷰
+
+## 코드 리뷰  
+
 코드리뷰(Code Review)는 언제나 환영입니다. 😊
 
 
@@ -29,8 +33,10 @@ airdndscraper.py에서 디버깅(F5)를 실행 후 http://localhost:5000/으로 
   
 해당 숙소의 리뷰도 스크래핑을 원하면 more review 버튼을 클릭한다.  
 <img src="https://user-images.githubusercontent.com/57824259/91680172-6079e380-eb85-11ea-81d8-71c8434016d5.PNG" alt="end" width="500"/>  
-  
-## 동작 원리
+
+
+## 동작 원리  
+
 >아래의 동작을 통해 얻은 데이터들을 가지고 Airbnb Clone Coding 프로젝트에 사용 [프로젝트 바로가기](https://github.com/DEVengersAssemble)  
 <img src="https://user-images.githubusercontent.com/57824259/94338748-a1073880-002f-11eb-9576-0cf608661849.png" alt="scrape" width="400"/>  
 
@@ -44,11 +50,12 @@ pip install flask --framework
 pip install bs4
 ```
 
-## 제한사항
+## 제한 사항
 
-해당 사이트의 class name이나 구조가 바뀌면 코드수정 필요
+해당 사이트의 class name이나 구조가 바뀌면 코드수정 필요  
 
-## 업데이트 내역
+## 업데이트 내역  
+
 * 0.1.1
     * more review 추가
     * issue 해결 (이모트 가능)
@@ -57,6 +64,7 @@ pip install bs4
     * issue : host 당부의 말에 이모트를 넣을 시 오류. ( -utf8mb4-로 전환 필요 )
 * 0.0.1
     * 작업 진행 중
+
 
 ## 정보
 
