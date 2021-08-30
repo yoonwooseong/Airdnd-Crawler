@@ -48,6 +48,7 @@ pip install pymysql --DB
 pip install selenium
 pip install flask --framework
 pip install bs4
+pip install requests
 ```
 
 ## 제한 사항
