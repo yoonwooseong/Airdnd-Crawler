@@ -6,6 +6,12 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# custom files
+airbnbDetail.cpython-39.pyc
+airbnbMoreReview.cpython-39.pyc
+airbnbSQL.cpython-39.pyc
+config.cpython-39.pyc
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 

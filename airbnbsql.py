@@ -1,18 +1,8 @@
-import pymysql
 import os
-import time
-import re
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from urllib.parse import quote_plus
-from airbnbGPS import Convert_to_latlng
+from config import conn
 
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
-
-# DB와 연결된 코드
-
-conn = pymysql.connect(host = '52.78.111.36', user = 'root', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
 take_out_start_index = 0
