@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect
-from airbnbsearchlist import get_accommodation_infos
-from airbnbdetail import extract_detail
-from airbnbmorereview import extract_more_review
+from airbnbSearchList import get_accommodation_infos
+from airbnbDetail import extract_detail
+from airbnbMoreReview import extract_more_review
 
 app = Flask("SuperScrapper")
 

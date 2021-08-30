@@ -5,16 +5,16 @@ import re
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from urllib.parse import quote_plus
-from airbnblatlng import Convert_to_latlng
-from airbnbsql import check_room_idx_in_DB, insert_room_data_in_MysqlDB, insert_room_data_in_airdnd_home_picture, insert_room_data_in_airdnd_home_notice
-from airbnbsql import insert_room_data_in_airdnd_home_bed, insert_room_data_in_airdnd_home_convenient_facility, insert_room_data_in_airdnd_home_review, insert_room_data_in_airdnd_home_attractions_distance
-from airbnbsql import insert_room_data_in_airdnd_home_use_rule, insert_room_data_in_airdnd_home_safety_rule, insert_room_data_in_airdnd_host
+from airbnbGPS import Convert_to_latlng
+from airbnbSQL import check_room_idx_in_DB, insert_room_data_in_MysqlDB, insert_room_data_in_airdnd_home_picture, insert_room_data_in_airdnd_home_notice
+from airbnbSQL import insert_room_data_in_airdnd_home_bed, insert_room_data_in_airdnd_home_convenient_facility, insert_room_data_in_airdnd_home_review, insert_room_data_in_airdnd_home_attractions_distance
+from airbnbSQL import insert_room_data_in_airdnd_home_use_rule, insert_room_data_in_airdnd_home_safety_rule, insert_room_data_in_airdnd_host
 
 #####한글깨짐 방지###### 
 os.environ["NLS_LANG"] = ".AL32UTF8"
 
 # DB와 연결된 코드
-conn = pymysql.connect(host = '52.78.17.113', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
+conn = pymysql.connect(host = '52.78.111.36', user = 'root', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
 URL_PARAM = "?adults=1&location=%EA%B4%8C&check_in=2020-10-01&check_out=2020-10-03&source_impression_id=p3_1598247923_ydg6avDRJAlC0ViV"

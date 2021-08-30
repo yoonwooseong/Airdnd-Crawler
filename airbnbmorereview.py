@@ -9,7 +9,7 @@ from urllib.parse import quote_plus
 os.environ["NLS_LANG"] = ".AL32UTF8"
 
 # DB와 연결된 코드
-conn = pymysql.connect(host = '52.78.17.113', user = 'mysqluser', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
+conn = pymysql.connect(host = '52.78.111.36', user = 'root', password = '1111', db = 'AirdndDB', charset = 'utf8mb4', use_unicode=True)
 
 URL_BASE = "https://www.airbnb.co.kr/rooms/"
 db = conn.cursor()

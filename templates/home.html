@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style>
+            .contents {
+                margin: 20px;
+                padding-bottom: 20px;
+            }
+        </style>
         <title>Airdnd Scraper</title>
     </head>
-    <body>
-        <h1 style="text-align: center; margin-top: 250px; margin-bottom: 25px;" >Airdnd Scraper</h1>
-        <h4 style="text-align: center; color: rgb(75, 75, 75); margin-bottom: 50px;">
-            Enter the conditions   if you want to go on a trip 🛫</h4>
-        <form action="/scrape" method="get" style="text-align: center;">
-            <input placeholder="Where are you going?" required name="place"/>
-            <input placeholder="2020-09-10" required name="checkin"/>
-            <input placeholder="2020-09-17" required name="checkout"/>
-            <input placeholder="adults" required name="adults"/>
-            <button>Search</button>
-        </form>
+    <body style="background-image: url('/static/1.jpg'); background-repeat:no-repeat; background-size: cover;">
+        <div class="wrap" style="background:rgb(255, 255, 255, 0.5); border-radius: 15px;">
+            <div class="contents">
+                <h1 style="text-align: center; margin-top: 250px; margin-bottom: 25px;" >Airdnd Scraper</h1>
+                <h4 style="text-align: center; color: rgb(75, 75, 75); margin-bottom: 50px;">
+                    Enter the conditions   if you want to go on a trip 🛫</h4>
+                <form action="/scrape" method="get" style="text-align: center;">
+                    <input placeholder="Where are you going?" required name="place"/>
+                    <input placeholder="2020-09-10" required name="checkin"/>
+                    <input placeholder="2020-09-17" required name="checkout"/>
+                    <input placeholder="adults" required name="adults"/>
+                    <button>Search</button>
+                </form>
+            <div>
+        </div>
     </body>
 </html>
