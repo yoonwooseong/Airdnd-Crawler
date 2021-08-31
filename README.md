@@ -1,10 +1,11 @@
-# Airdnd Crawler (에어비엔비 크롤러)
+# Airdnd Crawler 
+##### 에어비엔비 크롤러
 
 <br>
 
 > **[Airdnd](https://github.com/DEVengersAssemble/airdnd-backend)** DEVengersAssemble/Airbnb clone cording 프로젝트에 필요한 데이터들을 추출하기 위한 웹 크롤러 개발
 
-해당 웹 크롤러(Web scraper)는 airbnb의 숙소 정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위해 Selenium과 BeautifulSoup4 라이브러리를 사용하고 단순 웹 애플리케이션을 구현하기 위해 Flask framework를 사용하였다. 스크랩후에 pymysql로 MySQL에 저장한다.
+ 해당 웹 크롤러(Web scraper)는 airbnb의 숙소 정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위해 Selenium과 BeautifulSoup4 라이브러리를 사용하고 단순 웹 애플리케이션을 구현하기 위해 Flask framework를 사용하였다. 스크랩후에 pymysql로 MySQL에 저장한다.
 
 <br>
 
