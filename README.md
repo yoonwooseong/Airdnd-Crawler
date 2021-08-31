@@ -1,47 +1,45 @@
-# Airdnd_scraper (only study)
-> -Airdnd-(DEVengersAssemble Airbnb clone cording)에 필요한 데이터들을 가져오기 위해 web-scraper개발
+# Airdnd Crawler (에어비엔비 크롤러)
 
-해당 web-scraper는 airbnb 숙소정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위한 Selenium과 BeautifulSoup4를 사용해 스크래핑을 하였고 프레임워크는 Flask framework를 사용하였다. 스크랩후에 pymysql로 MySQL에 저장한다.
+<br>
 
-***
+> **[Airdnd](https://github.com/DEVengersAssemble/airdnd-backend)** DEVengersAssemble/Airbnb clone cording 프로젝트에 필요한 데이터들을 추출하기 위한 웹 크롤러 개발
 
-## Used stack  
-<img src="https://user-images.githubusercontent.com/57824259/91246509-f4fdd380-e78a-11ea-86f6-1f2ed5aa9e74.png" alt="Flask" width="50" height="50"/> <img src="https://user-images.githubusercontent.com/57824259/91246511-f6c79700-e78a-11ea-8c45-d9561831cf8c.png" alt="Python" width="50" height="50"/>
-<img src="https://user-images.githubusercontent.com/57824259/91785026-51576c00-ec3f-11ea-84ae-39b8fc6af65e.png" alt="MySQL" width="50" height="50"/>
- **Selenium**, **Beautifulsoup4b**  
+해당 웹 크롤러(Web scraper)는 airbnb의 숙소 정보를 스크래핑하여 데이터베이스에 저장한다. 동적 크롤링을 위해 Selenium과 BeautifulSoup4 라이브러리를 사용하고 단순 웹 애플리케이션을 구현하기 위해 Flask framework를 사용하였다. 스크랩후에 pymysql로 MySQL에 저장한다.
 
+<br>
 
-## 코드 리뷰  
+## 🛢 Stack 
+**Python**, **Flask**, **MySQL**, **Selenium**, **Beautifulsoup4b**  
 
-코드리뷰(Code Review)는 언제나 환영입니다. 😊
+<br>
 
+## 📽 사용 예제
 
-## 사용 예제
+**1)** **app.py에서 디버깅(F5)를 실행 후 http://localhost:5000/ 접속**   
+<img src="https://user-images.githubusercontent.com/57824259/131431490-3d491793-fddc-43af-99d8-e2e956aa151a.PNG" alt="home" width="500"/>   
 
-app.py에서 디버깅(F5)를 실행 후 http://localhost:5000/ 으로 접속한다. 실행시 첫 화면(home.html)이다.
-<img src="https://user-images.githubusercontent.com/57824259/91246721-92f19e00-e78b-11ea-8444-e29a5b89c477.png" alt="home" width="500"/>  
-해당 검색창에 각 조건을 입력해 Search 버튼을 클릭한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91246723-9422cb00-e78b-11ea-950f-b9b96a4afdf9.png" alt="home search" width="500"/>
+**2)** **해당 검색창에 각 조건을 입력해 Search 버튼을 클릭**  
 
-아래와 같이 스크래핑을 print하고 DB에 저장한다.  
+**3)** **크롤링 후 DB에 저장**  
 <img src="https://user-images.githubusercontent.com/57824259/93201112-b2c52200-f78b-11ea-9cbf-f5a5a1d4ff7e.PNG" alt="DB tables" width="200"/>
 <img src="https://user-images.githubusercontent.com/57824259/91679946-a2eef080-eb84-11ea-9d07-95da581a785c.PNG" alt="home DB" width="500"/>
-
    
-스크래핑이 완료되면 해당 화면(scrapepage.html)으로 이동한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91679942-a1252d00-eb84-11ea-8ad9-227d5ee55cd6.PNG" alt="scrapepage" width="500"/>
+**4)** **스크래핑 완료 후 해당 화면(scrapepage.html)으로 이동**  
+<img src="https://user-images.githubusercontent.com/57824259/131431496-4b949500-a0f0-4fad-941d-71fb7e844072.PNG" alt="scrapepage" width="500"/>
   
-해당 숙소의 리뷰도 스크래핑을 원하면 more review 버튼을 클릭한다.  
-<img src="https://user-images.githubusercontent.com/57824259/91680172-6079e380-eb85-11ea-81d8-71c8434016d5.PNG" alt="end" width="500"/>  
+**5)** **해당 숙소의 리뷰도 스크래핑을 원하면 more review 버튼을 클릭**  
+<img src="https://user-images.githubusercontent.com/57824259/131431494-98507078-6322-4d77-89f3-4ab50e6c62c3.PNG" alt="end" width="500"/>  
 
+<br>
 
-## 동작 원리  
+## 📌 동작 알고리즘
 
->아래의 동작을 통해 얻은 데이터들을 가지고 Airbnb Clone Coding 프로젝트에 사용 [프로젝트 바로가기](https://github.com/DEVengersAssemble)  
+> 아래의 동작을 통해 얻은 데이터들을 가지고 Airbnb Clone Coding 프로젝트에 사용 [프로젝트 바로가기](https://github.com/DEVengersAssemble)  
 <img src="https://user-images.githubusercontent.com/57824259/94338748-a1073880-002f-11eb-9576-0cf608661849.png" alt="scrape" width="400"/>  
 
+<br>
 
-## 개발 환경 설정
+## ⚙ 개발 환경 설정
 
 ```sh
 pip install pymysql --DB
@@ -50,13 +48,24 @@ pip install flask --framework
 pip install bs4
 pip install requests
 ```
+<br>
 
-## 제한 사항
+## ❗ 제한 사항
 
-해당 사이트의 class name이나 구조가 바뀌면 코드수정 필요  
+해당 사이트의 html 즉, class name이나 구조가 변경되면 코드 수정이 필요  
 
-## 업데이트 내역  
+<br>
 
+## ✏ 코드 리뷰  
+
+코드리뷰(Code Review)는 언제나 환영입니다. 😊
+
+<br>
+
+## 🧾 업데이트 내역  
+
+* 1.0.0
+    * UI 변경 및 config.py 작성
 * 0.1.1
     * more review 추가
     * issue 해결 (이모트 가능)
@@ -66,8 +75,9 @@ pip install requests
 * 0.0.1
     * 작업 진행 중
 
+<br>
 
-## 정보
+## 📃 정보
 
 윤우성 –  dntjd851@naver.com
 
@@ -76,7 +86,9 @@ MIT 라이센스를 준수하며 ``LICENSE``에서 자세한 정보를 확인할
 
 [https://github.com/yoonwooseong/github-link](https://github.com/yoonwooseong/)
 
-## 기여 방법
+<br>
+
+## 👌 기여 방법
 
 1. (<https://github.com/yourname/yourproject/fork>)을 포크합니다.
 2. (`git checkout -b feature`) 명령어로 새 브랜치를 만드세요.
